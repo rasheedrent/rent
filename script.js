@@ -1,315 +1,426 @@
-// =============================================
-// نظام إدارة الإيجارات - نسخة الإنتاج النهائية
-// =============================================
+// =====================
+// Core Data
+// =====================
+let appData = {
+    settings: { maxLoginAttempts: 3, notifyDays: 7, ownerEmail: '', ownerWhatsapp: '', emailjsServiceId: '', emailjsTemplateId: '', emailjsPublicKey: '', notificationLang: 'ar', password: 'admin123' },
+    tenants: [], contracts: [], payments: [], paymentRecords: [], activity: []
+};
+let loginAttempts = 0;
+let confirmCallback = null;
+let selectedPaymentMethod = null;
+let countdownIntervals = [];
+let editingId = {}; // For editing flags
 
-var appData = { users: [], contracts: [], notifications: [], settings: { notifyEmail: '', notifyDays: 7, emailJs: {} }, loginAttempts: 0, lockoutUntil: 0 };
-var currentSession = null, sessionTimer = null, sessionSeconds = 1800;
-var countdownInterval = null, autoCheckInterval = null;
-var pendingPayment = null, notifiedPayments = {};
+// =====================
+// Helpers
+// =====================
+const $ = id => document.getElementById(id);
+const loadData = () => { const saved = localStorage.getItem('rentalAppData'); if (saved) appData = { ...appData, ...JSON.parse(saved) }; };
+const saveData = () => localStorage.setItem('rentalAppData', JSON.stringify(appData));
+const formatDate = d => d ? new Date(d).toLocaleDateString('ar-SA') : '-';
+const showToast = (msg, type = 'success') => { const t = $('toast'); $('toastMessage').textContent = msg; t.className = `toast show ${type}`; setTimeout(() => t.classList.remove('show'), 2000); };
+const addLog = a => { appData.activity.unshift({ a, d: new Date().toISOString() }); if(appData.activity.length > 50) appData.activity.pop(); saveData(); };
 
-// =------------ الأمان =============
-function hashPassword(pw) { var s = pw + '_rent_salt_2024', h = 0; for (var i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h = h & h; } var hex = ''; var sh = Math.abs(h); for (var j = 0; j < 8; j++) hex += ((sh >> (j * 4)) & 0xF).toString(16); var r = ''; var c = hex + btoa(s).replace(/=/g, '').substring(0, 16); for (var k = 0; k < c.length; k++) r += String.fromCharCode(c.charCodeAt(k) ^ (k * 7 + 3)); return btoa(r).replace(/=/g, ''); }
-function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 9); }
-
-// =------------ الإشعارات =============
-function requestNotifPermission() { if (!('Notification' in window)) return; Notification.requestPermission().then(perm => updateNotifPermUI(perm)); }
-function updateNotifPermUI(perm) { var el = document.getElementById('notifPermStatus'); if (el) { el.textContent = perm === 'granted' ? 'مفعّلة' : 'غير مفعّلة'; el.style.color = perm === 'granted' ? 'var(--primary)' : 'var(--muted)'; } }
-function sendBrowserNotif(t, b) { if (Notification.permission === 'granted') new Notification(t, { body: b, icon: '🏠' }); }
-
-// =------------ EmailJS =============
-function initEmailJS() { if (appData.settings.emailJs && appData.settings.emailJs.userId) try { emailjs.init(appData.settings.emailJs.userId); } catch (e) { } }
-function sendAutoEmail(tenant, prop, amt, due) {
-    var cfg = appData.settings.emailJs;
-    if (!cfg.serviceId || !cfg.templateId || !cfg.ownerEmail) return;
-    var arMsg = "تذكير بإيجار العقار: " + prop + "، المبلغ: " + formatCurrency(amt);
-    var enMsg = "Rent Reminder for property: " + prop + ", Amount: " + formatCurrency(amt);
-    var params = { to_email: cfg.ownerEmail, tenant_name: tenant, property: prop, amount: formatCurrency(amt), due_date: formatDate(due), message: arMsg + "\n\n" + enMsg };
-    emailjs.send(cfg.serviceId, cfg.templateId, params).then(() => console.log('Email Sent')).catch(e => console.log('Email Error', e));
+// =====================
+// Navigation & Auth
+// =====================
+function navigateTo(page) {
+    $$('.nav-item').forEach(i => i.classList.remove('active'));
+    $$(`[data-page="${page}"]`)?.classList.add('active');
+    $$('.page').forEach(p => p.classList.add('hidden'));
+    $(`page-${page}`)?.classList.remove('hidden');
+    if (window.innerWidth < 768) $('sidebar').classList.remove('open');
 }
 
-// =------------ البيانات =============
-function generatePayments(c) {
-    var pays = [], start = new Date(c.startDate), end = new Date(c.endDate);
-    var freq = { monthly: 1, quarterly: 3, semiannual: 6, annual: 12 };
-    var m = freq[c.frequency] || 1, now = new Date(), cur = new Date(start), idx = 0;
-    while (cur < end) {
-        var dd = new Date(cur), status = 'pending', pd = null, pm = null;
-        if (dd <= now) { var diff = Math.floor((now - dd) / 86400000); status = diff > 5 ? 'overdue' : 'paid'; pd = status === 'paid' ? dd.toISOString().split('T')[0] : null; pm = status === 'paid' ? 'system' : null; }
-        pays.push({ id: generateId(), index: idx, amount: c.amount, dueDate: dd.toISOString().split('T')[0], status, paidDate: pd, paymentMethod: pm, notified: false });
-        cur.setMonth(cur.getMonth() + m); idx++;
-    } return pays;
-}
-
-function initDefaultData() {
-    var y = new Date().getFullYear();
-    appData.users = [{ username: 'admin', passwordHash: hashPassword('admin123'), role: 'admin' }];
-    appData.contracts = [
-        { id: generateId(), tenantName: 'أحمد محمد', phone: '0501234567', email: 'a@a.com', property: 'الرياض - شقة', amount: 3000, frequency: 'monthly', startDate: y + '-01-01', endDate: (y + 1) + '-01-01', notes: '', status: 'active', payments: [] },
-        { id: generateId(), tenantName: 'سارة خالد', phone: '0559876543', email: 's@b.com', property: 'جدة - فيلا', amount: 45000, frequency: 'quarterly', startDate: y + '-03-01', endDate: (y + 1) + '-03-01', notes: '', status: 'active', payments: [] }
-    ];
-    appData.contracts.forEach(c => c.payments = generatePayments(c));
-    saveData();
-}
-function saveData() { try { localStorage.setItem('rentAppData', JSON.stringify(appData)); } catch (e) { } }
-function loadData() { try { var d = localStorage.getItem('rentAppData'); if (d) { var p = JSON.parse(d); appData = { ...appData, ...p }; if (!appData.settings.emailJs) appData.settings.emailJs = {}; } else initDefaultData(); } catch (e) { initDefaultData(); } }
-
-// =------------ تسجيل الدخول =============
-function handleLogin() {
-    var u = document.getElementById('loginUser').value.trim();
-    var p = document.getElementById('loginPass').value;
-    var err = document.getElementById('loginError');
-    var lockMsg = document.getElementById('lockoutMsg');
-
-    if (appData.lockoutUntil && Date.now() < appData.lockoutUntil) {
-        var r = Math.ceil((appData.lockoutUntil - Date.now()) / 1000);
-        err.textContent = 'مقفل. انتظر ' + r + ' ثانية'; err.style.display = 'block'; return;
-    }
-    err.style.display = 'none'; lockMsg.style.display = 'none';
-    if (!u || !p) { err.textContent = 'أدخل البيانات'; err.style.display = 'block'; return; }
-
-    var h = hashPassword(p), user = appData.users.find(x => x.username === u && x.passwordHash === h);
-
-    if (user) {
-        appData.loginAttempts = 0; appData.lockoutUntil = 0; saveData();
-        currentSession = { username: user.username };
-        sessionStorage.setItem('rentSession', JSON.stringify(currentSession));
-        document.getElementById('loginUser').value = ''; document.getElementById('loginPass').value = '';
-        showApp();
+function handleLogin(e) {
+    e.preventDefault();
+    const err = $('loginError');
+    const warn = $('attemptsWarning');
+    if ($('username').value === 'admin' && $('password').value === appData.settings.password) {
+        $('loginScreen').classList.add('hidden');
+        $('mainApp').classList.remove('hidden');
+        loginAttempts = 0;
+        initApp();
     } else {
-        appData.loginAttempts++;
-        if (appData.loginAttempts >= 5) {
-            appData.lockoutUntil = Date.now() + 60000;
-            err.textContent = 'تم القفل!'; lockMsg.textContent = 'انتظر دقيقة'; lockMsg.style.display = 'block';
+        loginAttempts++;
+        err.textContent = 'بيانات الدخول غير صحيحة';
+        err.classList.remove('hidden');
+        const rem = appData.settings.maxLoginAttempts - loginAttempts;
+        if (rem > 0) {
+            $('remainingAttempts').textContent = rem;
+            warn.classList.remove('hidden');
         } else {
-            err.textContent = 'خطأ! المتبقي: ' + (5 - appData.loginAttempts); err.style.display = 'block';
-        } saveData();
+            err.textContent = 'تم حظر الدخول';
+            $('loginForm button').disabled = true;
+        }
     }
 }
 
-function handleLogout() { currentSession = null; sessionStorage.removeItem('rentSession'); clearInterval(sessionTimer); clearInterval(countdownInterval); clearInterval(autoCheckInterval); document.getElementById('app').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex'; }
-function showApp() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('app').style.display = 'block'; document.getElementById('currentUserDisplay').textContent = currentSession.username; resetSessionTimer(); initEmailJS(); navigate('dashboard'); startTimers(); }
+// =====================
+// Init & Render
+// =====================
+function initApp() {
+    loadData();
+    renderDash();
+    renderTenants();
+    renderContracts();
+    renderPayments();
+    updateSelects();
+    renderCountdown();
+    renderHistory();
+    loadSettings();
+    startTimers();
+}
 
-// =------------ مؤقتات =============
-function resetSessionTimer() { sessionSeconds = 1800; clearInterval(sessionTimer); sessionTimer = setInterval(() => { sessionSeconds--; document.getElementById('sessionTimer').textContent = Math.floor(sessionSeconds / 60) + ':' + (sessionSeconds % 60).toString().padStart(2, '0'); if (sessionSeconds <= 0) handleLogout(); }, 1000); }
-function startTimers() { startCountdown(); setInterval(() => checkAndNotify(true), 60000); setTimeout(() => checkAndNotify(), 500); }
+function renderDash() {
+    $('totalTenants').textContent = appData.tenants.length;
+    $('activeContracts').textContent = appData.contracts.filter(c => new Date(c.endDate) > new Date()).length;
+    $('totalRent').textContent = appData.contracts.reduce((s, c) => s + (parseFloat(c.amount) || 0), 0).toLocaleString();
+    const upc = appData.payments.filter(p => p.status !== 'paid' && new Date(p.dueDate) > new Date() && Math.ceil((new Date(p.dueDate) - new Date()) / 86400000) <= appData.settings.notifyDays).length;
+    $('upcomingCount').textContent = upc;
 
-// =------------ العداد =============
-function startCountdown() { renderCountdown('dashCountdown', 4); renderCountdown('fullCountdown', null); setInterval(() => updateCountdown(), 1000); }
-function updateCountdown() { document.querySelectorAll('.cc-num[data-type="s"]').forEach(el => { let due = el.closest('.countdown-card').dataset.due; if (!due) return; let diff = Math.abs(new Date(due) - new Date()); el.textContent = Math.floor((diff % 60000) / 1000); }); }
-function renderCountdown(id, limit) {
-    var container = document.getElementById(id); if (!container) return;
-    var items = getAllPayments().filter(p => p.status !== 'paid').sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-    if (limit) items = items.slice(0, limit);
-    if (items.length === 0) { container.innerHTML = '<div class="empty-state">لا توجد دفعات</div>'; return; }
-    container.innerHTML = items.map(p => {
-        let due = new Date(p.dueDate), now = new Date();
-        let diff = Math.abs(due - now), days = Math.floor(diff / 86400000), hrs = Math.floor((diff % 86400000) / 3600000), min = Math.floor((diff % 3600000) / 60000), sec = Math.floor((diff % 60000) / 1000);
-        let cls = p.status === 'overdue' ? 'overdue-card' : days <= 3 ? 'urgent' : '';
-        return `<div class="countdown-card ${cls}" data-due="${p.dueDate}">
-            <div class="cc-status">${p.status === 'overdue' ? 'متأخر' : days === 0 ? 'اليوم' : 'قادم'}</div>
-            <div class="cc-top"><div><div class="cc-tenant">${p.tenantName}</div><div class="cc-property">${p.property}</div></div><div class="cc-amount">${formatCurrency(p.amount)}</div></div>
-            <div class="cc-countdown"><div class="cc-unit"><span class="cc-num">${days}</span><span class="cc-label">ي</span></div><div class="cc-unit"><span class="cc-num">${hrs}</span><span class="cc-label">س</span></div><div class="cc-unit"><span class="cc-num">${min}</span><span class="cc-label">د</span></div><div class="cc-unit"><span class="cc-num" data-type="s">${sec}</span><span class="cc-label">ث</span></div></div>
-            <div class="cc-actions no-print">
-                <button class="btn btn-sm btn-primary" onclick="openPaymentModal('${p.contractId}',${p.index})"><i class="fas fa-check"></i> دفع</button>
-                <button class="btn btn-sm btn-secondary" onclick="sendReminder('${p.contractId}')"><i class="fas fa-envelope"></i></button>
-                <button class="btn btn-sm btn-whatsapp" onclick="sendWhatsAppReminder('${p.contractId}')"><i class="fab fa-whatsapp"></i></button>
+    // Quick View
+    const qc = $('quickCountdown');
+    qc.innerHTML = '';
+    appData.payments.filter(p => p.status !== 'paid' && new Date(p.dueDate) > new Date()).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate)).slice(0, 3).forEach(p => {
+        const t = appData.tenants.find(x => x.id === p.tenantId);
+        const d = Math.ceil((new Date(p.dueDate) - new Date()) / 86400000);
+        qc.innerHTML += `<div class="glass rounded-lg p-3"><div class="flex justify-between"><span class="font-medium text-sm">${t?.name || 'غير محدد'}</span><span class="badge ${d<=3?'badge-danger':'badge-success'}">${d} يوم</span></div><div class="text-xs text-gray-400 mt-1">${parseFloat(p.amount).toLocaleString()} ر.س</div></div>`;
+    });
+    if(!qc.innerHTML) qc.innerHTML = '<p class="text-gray-500 text-xs col-span-3 text-center">لا يوجد دفعات قريبة</p>';
+
+    // Recent Activity
+    const rp = $('recentPayments');
+    rp.innerHTML = '';
+    appData.activity.slice(0, 5).forEach(l => {
+        rp.innerHTML += `<div class="flex justify-between items-center text-gray-300"><span>${l.a}</span><span class="text-xs text-gray-500">${new Date(l.d).toLocaleString('ar-SA')}</span></div>`;
+    });
+    if(!rp.innerHTML) rp.innerHTML = '<p class="text-gray-500 text-xs">لا يوجد نشاط</p>';
+}
+
+function renderCountdown() {
+    const c = $('countdownList');
+    c.innerHTML = '';
+    const items = appData.payments.filter(p => p.status !== 'paid' && new Date(p.dueDate) > new Date()).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+    
+    $('countdownDot').classList.toggle('hidden', items.length === 0);
+
+    items.forEach(p => {
+        const t = appData.tenants.find(x => x.id === p.tenantId);
+        c.innerHTML += `
+        <div class="countdown-container fade-in" id="cd-${p.id}">
+            <div class="flex justify-between mb-2">
+                <div><h3 class="font-bold">${t?.name || 'غير محدد'}</h3><p class="text-xs text-gray-400">${t?.phone || ''}</p></div>
+                <div class="text-left"><span class="text-lg font-black text-emerald-400">${parseFloat(p.amount).toLocaleString()}</span><span class="text-xs text-gray-400 block">${formatDate(p.dueDate)}</span></div>
+            </div>
+            <div class="countdown-numbers" id="tmr-${p.id}">
+                <div class="countdown-unit"><span class="countdown-value" id="d-${p.id}">00</span><span class="countdown-label">يوم</span></div>
+                <div class="countdown-unit"><span class="countdown-value" id="h-${p.id}">00</span><span class="countdown-label">ساعة</span></div>
+                <div class="countdown-unit"><span class="countdown-value" id="m-${p.id}">00</span><span class="countdown-label">دقيقة</span></div>
+                <div class="countdown-unit"><span class="countdown-value" id="s-${p.id}">00</span><span class="countdown-label">ثانية</span></div>
+            </div>
+            <div class="flex gap-2 mt-3">
+                <button class="btn-primary flex-1 text-xs" type="button" onclick="openPay('${p.id}')">تسجيل الدفع</button>
+                <button class="btn-secondary text-xs" type="button" onclick="notify('wa', '${p.id}')">واتساب</button>
+                <button class="btn-secondary text-xs" type="button" onclick="notify('mail', '${p.id}')">إيميل</button>
             </div>
         </div>`;
-    }).join('');
-}
-
-// =------------ التنقل =============
-function navigate(v) {
-    ['dashboard', 'contracts', 'payments', 'countdown', 'notifications', 'reports', 'settings'].forEach(id => document.getElementById(id + 'View').style.display = id === v ? 'block' : 'none');
-    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.view === v));
-    document.getElementById('pageTitle').textContent = { dashboard: 'الرئيسية', contracts: 'العقود', payments: 'المدفوعات', countdown: 'العداد', notifications: 'الإشعارات', reports: 'التقارير', settings: 'الإعدادات' }[v];
-    closeSidebar();
-    if (v === 'dashboard') renderDashboard(); else if (v === 'contracts') renderContracts(); else if (v === 'payments') renderPayments(); else if (v === 'reports') populateSelect();
-}
-document.querySelectorAll('.nav-item[data-view]').forEach(btn => btn.onclick = () => navigate(btn.dataset.view));
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
-
-// =------------ أدوات =============
-function formatCurrency(n) { return n.toLocaleString('ar-SA') + ' ر.س'; }
-function formatDate(d) { return new Date(d).toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' }); }
-function getAllPayments() { return appData.contracts.flatMap(c => c.payments.map(p => ({ ...p, contractId: c.id, tenantName: c.tenantName, property: c.property }))); }
-
-// =------------ لوحة التحكم =============
-function renderDashboard() {
-    let p = getAllPayments(), now = new Date();
-    document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card"><div class="stat-icon" style="background:var(--primary-l);color:var(--primary)"><i class="fas fa-file"></i></div><div class="stat-info"><h3>${appData.contracts.length}</h3><span>عقود</span></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:var(--accent-l);color:var(--accent)"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>${formatCurrency(p.filter(x => x.status === 'paid' && new Date(x.paidDate).getMonth() === now.getMonth()).reduce((s, x) => s + x.amount, 0))}</h3><span>إيرادات الشهر</span></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:var(--danger-l);color:var(--danger)"><i class="fas fa-exclamation"></i></div><div class="stat-info"><h3>${p.filter(x => x.status === 'overdue').length}</h3><span>متأخرات</span></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#3b82f620;color:#3b82f6"><i class="fas fa-clock"></i></div><div class="stat-info"><h3>${p.filter(x => x.status === 'pending').length}</h3><span>قادمة</span></div></div>
-    `;
-    renderCountdown('dashCountdown', 4);
-}
-
-// =------------ العقود =============
-function renderContracts() {
-    let s = (document.getElementById('contractSearch')?.value || '').toLowerCase();
-    let data = appData.contracts.filter(c => c.tenantName.toLowerCase().includes(s) || c.property.toLowerCase().includes(s));
-    document.getElementById('contractsTable').innerHTML = data.length ? data.map((c, i) => `<tr>
-        <td>${i + 1}</td><td><strong>${c.tenantName}</strong><br><span style="font-size:11px;color:var(--muted)">${c.phone}</span></td>
-        <td>${c.property}</td><td>${formatCurrency(c.amount)}</td><td>${{ monthly: 'شهري', quarterly: 'ربعي', annual: 'سنوي' }[c.frequency]}</td>
-        <td>${formatDate(c.startDate)}</td><td>${formatDate(c.endDate)}</td>
-        <td><span class="badge-status badge-${c.status === 'active' ? 'active' : 'expired'}">${c.status === 'active' ? 'نشط' : 'منتهي'}</span></td>
-        <td class="no-print">
-            <button class="btn btn-icon btn-secondary" onclick="editContract('${c.id}')"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-icon btn-danger" onclick="confirmDelete('${c.id}')"><i class="fas fa-trash"></i></button>
-        </td>
-    </tr>`).join('') : '<tr><td colspan="9" style="text-align:center">لا توجد بيانات</td></tr>';
-}
-function openContractModal() {
-    document.getElementById('editContractId').value = '';
-    document.getElementById('contractModalTitle').textContent = 'إضافة عقد جديد';
-    ['cTenantName', 'cPhone', 'cEmail', 'cProperty', 'cAmount', 'cNotes'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('cFrequency').value = 'monthly';
-    document.getElementById('cStartDate').value = ''; document.getElementById('cEndDate').value = '';
-    document.getElementById('contractModal').classList.add('show');
-}
-function editContract(id) { let c = appData.contracts.find(x => x.id === id); if (!c) return; document.getElementById('editContractId').value = id; document.getElementById('contractModalTitle').textContent = 'تعديل'; document.getElementById('cTenantName').value = c.tenantName; document.getElementById('cPhone').value = c.phone; document.getElementById('cEmail').value = c.email; document.getElementById('cProperty').value = c.property; document.getElementById('cAmount').value = c.amount; document.getElementById('cFrequency').value = c.frequency; document.getElementById('cStartDate').value = c.startDate; document.getElementById('cEndDate').value = c.endDate; document.getElementById('cNotes').value = c.notes; document.getElementById('contractModal').classList.add('show'); }
-function saveContract() {
-    let id = document.getElementById('editContractId').value, obj = {
-        tenantName: document.getElementById('cTenantName').value.trim(), phone: document.getElementById('cPhone').value.trim(), email: document.getElementById('cEmail').value.trim(),
-        property: document.getElementById('cProperty').value.trim(), amount: parseFloat(document.getElementById('cAmount').value), frequency: document.getElementById('cFrequency').value,
-        startDate: document.getElementById('cStartDate').value, endDate: document.getElementById('cEndDate').value, notes: document.getElementById('cNotes').value.trim()
-    };
-    if (!obj.tenantName || !obj.property || !obj.amount || !obj.startDate) { showToast('أكمل البيانات', 'error'); return; }
-    if (id) { let idx = appData.contracts.findIndex(x => x.id === id); if (idx > -1) { appData.contracts[idx] = { ...appData.contracts[idx], ...obj, status: new Date(obj.endDate) > new Date() ? 'active' : 'expired' }; appData.contracts[idx].payments = generatePayments(appData.contracts[idx]); } }
-    else { let nc = { ...obj, id: generateId(), status: 'active', payments: [] }; nc.payments = generatePayments(nc); appData.contracts.push(nc); }
-    saveData(); closeModal('contractModal'); renderContracts(); showToast('تم الحفظ', 'success');
-}
-function confirmDelete(id) { document.getElementById('confirmDeleteBtn').onclick = () => { appData.contracts = appData.contracts.filter(x => x.id !== id); saveData(); closeModal('deleteModal'); renderContracts(); }; document.getElementById('deleteModal').classList.add('show'); }
-
-// =------------ المدفوعات =============
-function renderPayments() {
-    let st = document.getElementById('payFilterStatus')?.value || 'all', src = document.getElementById('paySearch')?.value?.toLowerCase() || '';
-    let data = getAllPayments().filter(p => (st === 'all' || p.status === st) && (p.tenantName.toLowerCase().includes(src) || p.property.toLowerCase().includes(src)));
-    document.getElementById('paymentsTable').innerHTML = data.length ? data.map(p => `<tr>
-        <td>${p.tenantName}</td><td>${p.property}</td><td>${formatCurrency(p.amount)}</td><td>${formatDate(p.dueDate)}</td>
-        <td><span class="badge-status badge-${p.status}">${{ paid: 'مدفوع', pending: 'قادم', overdue: 'متأخر' }[p.status]}</span></td>
-        <td>${p.paymentMethod ? { hawala: 'حوالة', cash: 'كاش', system: 'نظام' }[p.paymentMethod] : '—'}</td><td>${p.paidDate ? formatDate(p.paidDate) : '—'}</td>
-        <td class="no-print">${p.status !== 'paid' ? `<button class="btn btn-sm btn-primary" onclick="openPaymentModal('${p.contractId}',${p.index})">تسجيل</button>` : '✓'}</td>
-    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center">لا توجد بيانات</td></tr>';
-}
-
-// =------------ نافذة الدفع (مصلحة) =============
-function openPaymentModal(cid, idx) {
-    pendingPayment = { cid, idx };
-    document.getElementById('paymentModal').classList.add('show');
-}
-function confirmPaymentMethod(method) {
-    if (!pendingPayment) return;
-    let contract = appData.contracts.find(c => c.id === pendingPayment.cid);
-    if (!contract) return;
-    let payment = contract.payments.find(p => p.index === pendingPayment.idx);
-    if (!payment) return;
-
-    payment.status = 'paid';
-    payment.paidDate = new Date().toISOString().split('T')[0];
-    payment.paymentMethod = method;
-    
-    saveData();
-    closeModal('paymentModal');
-    showToast('تم تسجيل الدفع (' + (method === 'hawala' ? 'حوالة' : 'كاش') + ')', 'success');
-    renderDashboard();
-    renderPayments();
-    startCountdown();
-}
-
-// =------------ الإشعارات =============
-function checkAndNotify(silent) {
-    let days = appData.settings.notifyDays || 7; now = new Date();
-    getAllPayments().forEach(p => {
-        if (p.status === 'pending') {
-            let diff = Math.ceil((new Date(p.dueDate) - now) / 86400000);
-            if (diff >= 0 && diff <= days && !p.notified) {
-                appData.notifications.unshift({ id: generateId(), tenantName: p.tenantName, property: p.property, amount: p.amount, daysLeft: diff, read: false });
-                let c = appData.contracts.find(x => x.id === p.contractId); if (c) { let pay = c.payments.find(x => x.id === p.id); if (pay) pay.notified = true; }
-                if (diff <= 3) sendAutoEmail(p.tenantName, p.property, p.amount, p.dueDate);
-            }
-        }
     });
-    saveData(); updateNotifBadge(); if (!silent) showToast('تم الفحص', 'info');
+    if(!items.length) c.innerHTML = '<div class="glass rounded-xl p-8 text-center text-gray-400">لا توجد دفعات قادمة</div>';
 }
-function renderNotifications() {
-    let el = document.getElementById('notifList');
-    el.innerHTML = appData.notifications.length ? appData.notifications.map(n => `<div class="notif-item" onclick="this.classList.add('read')">
-        <div class="notif-text"><h4>${n.tenantName}</h4><p>${n.property} | ${formatCurrency(n.amount)} | متبقي ${n.daysLeft} يوم</p></div>
-        <div class="actions-group no-print">
-            <button class="btn btn-icon btn-sm btn-secondary" onclick="event.stopPropagation();sendEmailN('${n.id}')"><i class="fas fa-envelope"></i></button>
-            <button class="btn btn-icon btn-sm btn-whatsapp" onclick="event.stopPropagation();sendWhatsAppN('${n.id}')"><i class="fab fa-whatsapp"></i></button>
-        </div>
-    </div>`).join('') : '<div class="empty-state">لا توجد إشعارات</div>';
-    updateNotifBadge();
-}
-function updateNotifBadge() { let u = appData.notifications.filter(n => !n.read).length; let b = document.getElementById('notifCount'); b.style.display = u ? 'flex' : 'none'; b.textContent = u; }
 
-// =------------ التواصل (ثنائي اللغة) =============
-function sendReminder(cid) { let c = appData.contracts.find(x => x.id === cid); if (!c) return; window.open(`mailto:${c.email || ''}?subject=تذكير إيجار&body=${encodeURIComponent('سلام عليكم ' + c.tenantName + '، تذكير بإيجار ' + c.property + ' مبلغ ' + formatCurrency(c.amount))}`, '_blank'); }
-function sendWhatsAppReminder(cid) {
-    let c = appData.contracts.find(x => x.id === cid);
-    if (!c) return;
-    let ph = c.phone ? c.phone.replace(/^0/, '966') : '';
-    if (!ph) { showToast('لا يوجد رقم جوال', 'error'); return; }
+function startTimers() {
+    countdownIntervals.forEach(i => clearInterval(i));
+    countdownIntervals = [];
+    appData.payments.forEach(p => {
+        if(p.status === 'paid') return;
+        const tick = () => {
+            const diff = new Date(p.dueDate) - new Date();
+            if(diff <= 0) return;
+            const D = Math.floor(diff / 86400000);
+            const H = Math.floor((diff % 86400000) / 3600000);
+            const M = Math.floor((diff % 3600000) / 60000);
+            const S = Math.floor((diff % 60000) / 1000);
+            if($(`d-${p.id}`)) $(`d-${p.id}`).textContent = String(D).padStart(2, '0');
+            if($(`h-${p.id}`)) $(`h-${p.id}`).textContent = String(H).padStart(2, '0');
+            if($(`m-${p.id}`)) $(`m-${p.id}`).textContent = String(M).padStart(2, '0');
+            if($(`s-${p.id}`)) $(`s-${p.id}`).textContent = String(S).padStart(2, '0');
+        };
+        tick();
+        countdownIntervals.push(setInterval(tick, 1000));
+    });
+}
+
+// =====================
+// CRUD Operations
+// =====================
+function renderTenants() {
+    const tb = $('tenantsTable');
+    tb.innerHTML = '';
+    appData.tenants.forEach(t => {
+        tb.innerHTML += `<tr><td class="font-medium">${t.name}</td><td>${t.phone}</td><td>${t.email || '-'}</td><td>${t.address || '-'}</td><td><button class="action-btn success" onclick="editTenant('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button> <button class="action-btn danger" onclick="del('t', '${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></td></tr>`;
+    });
+    if(!appData.tenants.length) tb.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 p-4">لا يوجد مستأجرين</td></tr>';
+}
+
+function openTenantModal(id = null) {
+    $('tenantForm').reset();
+    if(id) {
+        const t = appData.tenants.find(x => x.id === id);
+        $('tenantId').value = t.id;
+        $('tenantName').value = t.name;
+        $('tenantPhone').value = t.phone;
+        $('tenantEmail').value = t.email || '';
+        $('tenantAddress').value = t.address || '';
+        $('tenantModalTitle').textContent = 'تعديل مستأجر';
+        editingId.tenant = id;
+    } else {
+        editingId.tenant = null;
+        $('tenantModalTitle').textContent = 'إضافة مستأجر';
+    }
+    $('tenantModal').classList.add('show');
+}
+
+function saveTenant(e) {
+    e.preventDefault();
+    const t = {
+        id: editingId.tenant || Date.now().toString(),
+        name: $('tenantName').value,
+        phone: $('tenantPhone').value,
+        email: $('tenantEmail').value,
+        address: $('tenantAddress').value
+    };
+    const idx = appData.tenants.findIndex(x => x.id === t.id);
+    if(idx >= 0) appData.tenants[idx] = t;
+    else appData.tenants.push(t);
+    addLog(`حفظ مستأجر: ${t.name}`);
+    saveData();
+    renderTenants();
+    updateSelects();
+    $('tenantModal').classList.remove('show');
+    showToast('تم الحفظ');
+}
+
+// Simplified similar functions for Contracts and Payments
+function renderContracts() {
+    const tb = $('contractsTable'); tb.innerHTML = '';
+    const types = { monthly: 'شهري', quarterly: 'ربع سنوي', semiannual: 'نصف سنوي', annual: 'سنوي' };
+    appData.contracts.forEach(c => {
+        const t = appData.tenants.find(x => x.id === c.tenantId);
+        const active = new Date(c.endDate) > new Date();
+        tb.innerHTML += `<tr><td>${c.number}</td><td>${t?.name || '-'}</td><td>${c.property}</td><td>${parseFloat(c.amount).toLocaleString()}</td><td>${types[c.paymentType]}</td><td>${formatDate(c.startDate)}</td><td>${formatDate(c.endDate)}</td><td><span class="badge ${active?'badge-success':'badge-danger'}">${active?'نشط':'منتهي'}</span></td><td><button class="action-btn success" onclick="editContract('${c.id}')">E</button> <button class="action-btn danger" onclick="del('c', '${c.id}')">X</button></td></tr>`;
+    });
+    if(!appData.contracts.length) tb.innerHTML = '<tr><td colspan="9" class="text-center text-gray-500 p-4">لا يوجد عقود</td></tr>';
+}
+
+function openContractModal(id = null) {
+    $('contractForm').reset(); updateSelects();
+    if(id) {
+        const c = appData.contracts.find(x => x.id === id);
+        $('contractId').value = c.id; $('contractNumber').value = c.number; $('contractTenant').value = c.tenantId;
+        $('contractProperty').value = c.property; $('contractAmount').value = c.amount;
+        $('contractPaymentType').value = c.paymentType; $('contractStartDate').value = c.startDate;
+        $('contractEndDate').value = c.endDate; editingId.contract = id;
+    } else { editingId.contract = null; $('contractNumber').value = 'CTR-' + Date.now().toString().slice(-6); }
+    $('contractModal').classList.add('show');
+}
+
+function saveContract(e) {
+    e.preventDefault();
+    const c = {
+        id: editingId.contract || Date.now().toString(),
+        number: $('contractNumber').value, tenantId: $('contractTenant').value,
+        property: $('contractProperty').value, amount: $('contractAmount').value,
+        paymentType: $('contractPaymentType').value, startDate: $('contractStartDate').value,
+        endDate: $('contractEndDate').value
+    };
+    const idx = appData.contracts.findIndex(x => x.id === c.id);
+    if(idx >= 0) appData.contracts[idx] = c; else appData.contracts.push(c);
+    addLog(`حفظ عقد: ${c.number}`);
+    saveData(); renderContracts(); $('contractModal').classList.remove('show'); showToast('تم الحفظ');
+}
+
+function renderPayments() {
+    const tb = $('paymentsTable'); tb.innerHTML = '';
+    const st = { paid: 'مدفوع', pending: 'قيد الانتظار', overdue: 'متأخر' };
+    appData.payments.forEach(p => {
+        const t = appData.tenants.find(x => x.id === p.tenantId);
+        tb.innerHTML += `<tr><td>#${p.id.slice(-4)}</td><td>${t?.name || '-'}</td><td>${parseFloat(p.amount).toLocaleString()}</td><td>${formatDate(p.date)}</td><td>${formatDate(p.dueDate)}</td><td><span class="badge badge-${p.status==='paid'?'success':p.status==='overdue'?'danger':'warning'}">${st[p.status]}</span></td><td>${p.status !== 'paid' ? `<button class="action-btn success" onclick="openPay('${p.id}')">$</button>` : ''} <button class="action-btn info" onclick="editPayment('${p.id}')">E</button> <button class="action-btn danger" onclick="del('p', '${p.id}')">X</button></td></tr>`;
+    });
+    if(!appData.payments.length) tb.innerHTML = '<tr><td colspan="7" class="text-center text-gray-500 p-4">لا يوجد مدفوعات</td></tr>';
+}
+
+function openPaymentModal(id = null) {
+    $('paymentForm').reset(); updateSelects();
+    if(id) {
+        const p = appData.payments.find(x => x.id === id);
+        $('paymentId').value = p.id; $('paymentTenant').value = p.tenantId; $('paymentAmount').value = p.amount;
+        $('paymentDate').value = p.date; $('paymentDueDate').value = p.dueDate; $('paymentStatus').value = p.status;
+        editingId.payment = id;
+    } else { editingId.payment = null; $('paymentDate').value = new Date().toISOString().split('T')[0]; }
+    $('paymentModal').classList.add('show');
+}
+
+function savePayment(e) {
+    e.preventDefault();
+    const p = {
+        id: editingId.payment || Date.now().toString(),
+        tenantId: $('paymentTenant').value, amount: $('paymentAmount').value,
+        date: $('paymentDate').value, dueDate: $('paymentDueDate').value, status: $('paymentStatus').value
+    };
+    const idx = appData.payments.findIndex(x => x.id === p.id);
+    if(idx >= 0) appData.payments[idx] = p; else appData.payments.push(p);
+    addLog(`حفظ دفعة: ${p.amount}`);
+    saveData(); renderPayments(); renderCountdown(); startTimers(); $('paymentModal').classList.remove('show'); showToast('تم الحفظ');
+}
+
+// =====================
+// Payment Process & History
+// =====================
+function openPay(id) {
+    const p = appData.payments.find(x => x.id === id);
+    const t = appData.tenants.find(x => x.id === p.tenantId);
+    $('processPaymentId').value = id;
+    $('processTenantName').textContent = t?.name || '-';
+    $('processAmount').textContent = parseFloat(p.amount).toLocaleString() + ' ر.س';
+    $('transferDetails').classList.add('hidden');
+    selectedPaymentMethod = null;
+    $$('.payment-method-btn').forEach(b => b.classList.remove('selected'));
+    $('processPaymentModal').classList.add('show');
+}
+
+function confirmPay() {
+    if(!selectedPaymentMethod) return showToast('اختر طريقة الدفع', 'error');
+    const id = $('processPaymentId').value;
+    const p = appData.payments.find(x => x.id === id);
+    const t = appData.tenants.find(x => x.id === p.tenantId);
     
-    // رسالة ثنائية اللغة
-    var msgAr = 'السلام عليكم ' + c.tenantName + '،\nنود تذكيركم بسداد إيجار عقار: ' + c.property + '\nالمبلغ: ' + formatCurrency(c.amount) + '\nتاريخ الاستحقاق: ' + formatDate(c.dueDate);
-    var msgEn = '\n\n--- English ---\nDear ' + c.tenantName + ',\nReminder for rent of: ' + c.property + '\nAmount: ' + formatCurrency(c.amount) + '\nDue Date: ' + formatDate(c.dueDate);
+    appData.paymentRecords.push({
+        id: Date.now().toString(), paymentId: id, tenantId: p.tenantId, amount: p.amount,
+        method: selectedPaymentMethod, date: new Date().toISOString(),
+        ref: selectedPaymentMethod === 'transfer' ? $('transferReference').value : '',
+        bank: selectedPaymentMethod === 'transfer' ? $('transferBank').value : ''
+    });
     
-    window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msgAr + msgEn)}`, '_blank');
-}
-function sendEmailN(id) { let n = appData.notifications.find(x => x.id === id); if (!n) return; window.open(`mailto:?subject=تذكير&body=${encodeURIComponent('تذكير لـ ' + n.tenantName + ' - ' + n.property)}`, '_blank'); }
-function sendWhatsAppN(id) { let n = appData.notifications.find(x => x.id === id); if (!n) return; window.open(`https://wa.me/?text=${encodeURIComponent('تذكير لـ ' + n.tenantName + ' - ' + n.property)}`, '_blank'); }
-
-// =------------ التقارير =============
-function populateSelect() { let sel = document.getElementById('tenantReportSelect'); sel.innerHTML = '<option value="">اختر...</option>' + [...new Set(appData.contracts.map(c => c.tenantName))].map(n => `<option>${n}</option>`).join(''); }
-function generateTenantStatement() {
-    let name = document.getElementById('tenantReportSelect').value; if (!name) return;
-    let data = getAllPayments().filter(p => p.tenantName === name);
-    let total = data.reduce((s, p) => s + p.amount, 0);
-    let paid = data.filter(p => p.status === 'paid').reduce((s, p) => s + p.amount, 0);
-    document.getElementById('reportTitle').textContent = 'كشف حساب: ' + name;
-    document.getElementById('reportContent').innerHTML = `
-        <div style="margin-bottom:20px; padding:10px; background:#f0f0f0; color:#000; border-radius:8px; display:flex; justify-content:space-around" class="no-print">
-            <div><strong>المستحق:</strong> ${formatCurrency(total)}</div><div><strong>المدفوع:</strong> ${formatCurrency(paid)}</div><div><strong>المتبقي:</strong> ${formatCurrency(total - paid)}</div>
-        </div>
-        <div class="table-wrapper"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>الحالة</th><th>الطريقة</th></tr></thead><tbody>
-        ${data.map(p => `<tr><td>${formatDate(p.dueDate)}</td><td>${formatCurrency(p.amount)}</td><td>${p.status === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td><td>${p.paymentMethod || '—'}</td></tr>`).join('')}
-        </tbody></table></div>`;
-    document.getElementById('reportOutput').style.display = 'block';
-}
-function generateReport(type) {
-    let title = '', content = '';
-    if (type === 'contracts') { title = 'تقرير العقود'; content = `<table><thead><tr><th>#</th><th>المستأجر</th><th>العقار</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody>${appData.contracts.map((c, i) => `<tr><td>${i + 1}</td><td>${c.tenantName}</td><td>${c.property}</td><td>${formatCurrency(c.amount)}</td><td>${c.status}</td></tr>`).join('')}</tbody></table>`; }
-    else if (type === 'payments') { title = 'تقرير المدفوعات'; let all = getAllPayments(); content = `<table><thead><tr><th>المستأجر</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>${all.map(p => `<tr><td>${p.tenantName}</td><td>${formatCurrency(p.amount)}</td><td>${formatDate(p.dueDate)}</td><td>${p.status}</td></tr>`).join('')}</tbody></table>`; }
-    else if (type === 'overdue') { title = 'المتأخرات'; let all = getAllPayments().filter(p => p.status === 'overdue'); content = `<table><thead><tr><th>المستأجر</th><th>المبلغ</th><th>تاريخ الاستحقاق</th></tr></thead><tbody>${all.map(p => `<tr><td>${p.tenantName}</td><td>${formatCurrency(p.amount)}</td><td>${formatDate(p.dueDate)}</td></tr>`).join('')}</tbody></table>`; }
-    document.getElementById('reportTitle').textContent = title;
-    document.getElementById('reportContent').innerHTML = content;
-    document.getElementById('reportOutput').style.display = 'block';
+    p.status = 'paid';
+    addLog(`دفع ${selectedPaymentMethod === 'cash' ? 'كاش' : 'حوالة'}: ${p.amount} - ${t?.name}`);
+    saveData();
+    $('processPaymentModal').classList.remove('show');
+    renderPayments(); renderCountdown(); renderHistory(); renderDash();
+    showToast('تم التسجيل');
 }
 
-// =------------ الإعدادات =============
-function loadSettings() { document.getElementById('notifyDays').value = appData.settings.notifyDays || 7; document.getElementById('emailJsUserId').value = appData.settings.emailJs?.userId || ''; document.getElementById('emailJsServiceId').value = appData.settings.emailJs?.serviceId || ''; document.getElementById('emailJsTemplateId').value = appData.settings.emailJs?.templateId || ''; document.getElementById('ownerEmail').value = appData.settings.emailJs?.ownerEmail || ''; updateNotifPermUI(Notification.permission); }
-function saveSettings() { appData.settings.notifyDays = parseInt(document.getElementById('notifyDays').value); saveData(); showToast('تم', 'success'); }
-function saveEmailSettings() { appData.settings.emailJs = { userId: document.getElementById('emailJsUserId').value, serviceId: document.getElementById('emailJsServiceId').value, templateId: document.getElementById('emailJsTemplateId').value, ownerEmail: document.getElementById('ownerEmail').value }; saveData(); initEmailJS(); showToast('تم حفظ البريد', 'success'); }
-function changePassword() { let o = document.getElementById('oldPass').value, n = document.getElementById('newPass').value, c = document.getElementById('confirmPass').value; let u = appData.users.find(x => x.username === currentSession.username); if (!u || u.passwordHash !== hashPassword(o)) return showToast('خطأ في الحالية', 'error'); if (n !== c) return showToast('غير متطابقة', 'error'); u.passwordHash = hashPassword(n); saveData(); showToast('تم التغيير', 'success'); }
+function renderHistory() {
+    const c = $('paymentTimeline'); c.innerHTML = '';
+    let cash = 0, trans = 0;
+    appData.paymentRecords.forEach(r => {
+        r.method === 'cash' ? cash += parseFloat(r.amount) : trans += parseFloat(r.amount);
+    });
+    $('totalCash').textContent = cash.toLocaleString() + ' ر.س';
+    $('totalTransfer').textContent = trans.toLocaleString() + ' ر.س';
+    $('grandTotal').textContent = (cash + trans).toLocaleString() + ' ر.س';
 
-// =------------ أدوات مساعدة =============
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-function showToast(msg, type) { let c = document.getElementById('toastContainer'); let t = document.createElement('div'); t.className = 'toast toast-' + type; t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}"></i> ${msg}`; c.appendChild(t); setTimeout(() => t.remove(), 3000); }
+    const filter = $('historyFilter').value;
+    let data = [...appData.paymentRecords].reverse();
+    if(filter !== 'all') data = data.filter(r => r.method === filter);
 
-// =------------ النسخ الاحتياطي =============
-function backupData() { let d = localStorage.getItem('rentAppData'); if (!d) return; let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([d], { type: 'app/json' })); a.download = 'backup.json'; a.click(); }
-function restoreData(e) { let f = e.target.files[0]; if (!f) return; let r = new FileReader(); r.onload = ev => { try { appData = JSON.parse(ev.target.result); saveData(); location.reload(); } catch (err) { showToast('خطأ في الملف', 'error'); } }; r.readAsText(f); }
+    data.forEach(r => {
+        const t = appData.tenants.find(x => x.id === r.tenantId);
+        c.innerHTML += `<div class="timeline-item ${r.method}"><div class="flex justify-between"><span class="font-medium">${t?.name || '-'}</span><span class="text-emerald-400">${parseFloat(r.amount).toLocaleString()} ر.س</span></div><div class="text-xs text-gray-500 mt-1 flex justify-between"><span>${r.method === 'cash' ? 'كاش' : 'حوالة'} - ${formatDate(r.date)}</span><span>${r.ref || ''}</span></div></div>`;
+    });
+    if(!data.length) c.innerHTML = '<p class="text-gray-500 text-center p-4">لا يوجد سجل</p>';
+}
 
-// =------------ التشغيل =============
-(function init() {
+// =====================
+// Notifications & Utils
+// =====================
+function notify(type, pid) {
+    const p = appData.payments.find(x => x.id === pid);
+    const t = appData.tenants.find(x => x.id === p.tenantId);
+    if(!t) return showToast('لا يوجد مستأجر', 'error');
+    const msg = `مرحباً ${t.name}، تذكير بسداد الإيجار ${parseFloat(p.amount).toLocaleString()} ر.س بتاريخ ${formatDate(p.dueDate)}`;
+    if(type === 'wa') {
+        if(!t.phone) return showToast('لا يوجد رقم هاتف', 'error');
+        window.open(`https://wa.me/${t.phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+    } else {
+        if(!t.email) return showToast('لا يوجد بريد', 'error');
+        window.location.href = `mailto:${t.email}?subject=تذكير إيجار&body=${encodeURIComponent(msg)}`;
+    }
+    addLog(`إرسال تذكير ${type==='wa'?'واتساب':'إيميل'} لـ ${t.name}`);
+}
+
+function updateSelects() {
+    const sels = [$('contractTenant'), $('paymentTenant'), $('tenantReportSelect')];
+    sels.forEach(s => {
+        if(!s) return;
+        s.innerHTML = '<option value="">اختر المستأجر</option>';
+        appData.tenants.forEach(t => s.innerHTML += `<option value="${t.id}">${t.name}</option>`);
+    });
+}
+
+function del(type, id) {
+    const msgs = { t: 'حذف المستأجر؟', c: 'حذف العقد؟', p: 'حذف الدفعة؟' };
+    showConfirm(msgs[type], () => {
+        if(type === 't') { appData.tenants = appData.tenants.filter(x => x.id !== id); appData.contracts = appData.contracts.filter(x => x.tenantId !== id); appData.payments = appData.payments.filter(x => x.tenantId !== id); }
+        if(type === 'c') appData.contracts = appData.contracts.filter(x => x.id !== id);
+        if(type === 'p') appData.payments = appData.payments.filter(x => x.id !== id);
+        saveData(); initApp(); showToast('تم الحذف');
+    });
+}
+
+function showConfirm(msg, cb) { $('confirmMessage').textContent = msg; $('confirmModal').classList.add('show'); confirmCallback = cb; }
+function loadSettings() { $('maxLoginAttempts').value = appData.settings.maxLoginAttempts; $('notifyDays').value = appData.settings.notifyDays; $('ownerEmail').value = appData.settings.ownerEmail; $('ownerWhatsapp').value = appData.settings.ownerWhatsapp; $('emailjsServiceId').value = appData.settings.emailjsServiceId; $('emailjsTemplateId').value = appData.settings.emailjsTemplateId; $('emailjsPublicKey').value = appData.settings.emailjsPublicKey; $('notificationLang').value = appData.settings.notificationLang; }
+function saveSettings() { appData.settings.maxLoginAttempts = parseInt($('maxLoginAttempts').value); appData.settings.notifyDays = parseInt($('notifyDays').value); appData.settings.ownerEmail = $('ownerEmail').value; appData.settings.ownerWhatsapp = $('ownerWhatsapp').value; appData.settings.emailjsServiceId = $('emailjsServiceId').value; appData.settings.emailjsTemplateId = $('emailjsTemplateId').value; appData.settings.emailjsPublicKey = $('emailjsPublicKey').value; appData.settings.notificationLang = $('notificationLang').value; if($('newPassword').value) appData.settings.password = $('newPassword').value; saveData(); showToast('تم الحفظ'); }
+function printReport(type) { /* Basic implementation */ $('reportContent').innerHTML = `<h1>تقرير ${type}</h1><p>تم إنشاؤه بتاريخ ${new Date().toLocaleDateString('ar-SA')}</p><pre>${JSON.stringify(appData[type], null, 2)}</pre>`; $('reportPreview').classList.remove('hidden'); setTimeout(window.print, 300); }
+
+// =====================
+// Event Listeners
+// =====================
+document.addEventListener('DOMContentLoaded', () => {
     loadData();
-    let ss = sessionStorage.getItem('rentSession');
-    if (ss) { currentSession = JSON.parse(ss); showApp(); }
-    else { document.getElementById('loginScreen').style.display = 'flex'; }
-})();
+    // Login
+    $('loginForm').addEventListener('submit', handleLogin);
+    $('logoutBtn').addEventListener('click', () => showConfirm('تسجيل الخروج؟', () => { $('mainApp').classList.add('hidden'); $('loginScreen').classList.remove('hidden'); $('loginForm').reset(); loginAttempts = 0; }));
+    
+    // Navigation
+    $$('.nav-item').forEach(i => i.addEventListener('click', function() { navigateTo(this.dataset.page); }));
+    $$('.nav-link').forEach(i => i.addEventListener('click', function() { navigateTo(this.dataset.target); }));
+    $('menuToggle').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+
+    // Modals
+    $$('.modal-close').forEach(b => b.addEventListener('click', () => $(b.dataset.modal).classList.remove('show')));
+    $('confirmYesBtn').addEventListener('click', () => { if(confirmCallback) confirmCallback(); $('confirmModal').classList.remove('show'); });
+    $('confirmNoBtn').addEventListener('click', () => $('confirmModal').classList.remove('show'));
+
+    // Forms
+    $('addTenantBtn').addEventListener('click', () => openTenantModal());
+    $('tenantForm').addEventListener('submit', saveTenant);
+    $('addContractBtn').addEventListener('click', () => openContractModal());
+    $('contractForm').addEventListener('submit', saveContract);
+    $('addPaymentBtn').addEventListener('click', () => openPaymentModal());
+    $('paymentForm').addEventListener('submit', savePayment);
+
+    // Process Payment
+    $$('.payment-method-btn').forEach(b => b.addEventListener('click', function() { selectedPaymentMethod = this.dataset.method; $$('.payment-method-btn').forEach(x=>x.classList.remove('selected')); this.classList.add('selected'); $('transferDetails').classList.toggle('hidden', this.dataset.method !== 'transfer'); }));
+    $('confirmPaymentBtn').addEventListener('click', confirmPay);
+    $('cancelProcessPaymentBtn').addEventListener('click', () => $('processPaymentModal').classList.remove('show'));
+
+    // History & Settings
+    $('historyFilter').addEventListener('change', renderHistory);
+    $('saveSettingsBtn').addEventListener('click', saveSettings);
+
+    // Reports
+    $$('.report-btn').forEach(b => b.addEventListener('click', () => printReport(b.dataset.type)));
+    $('printTenantReportBtn').addEventListener('click', () => printReport('tenants')); // Simplified
+    $('createBackupBtn').addEventListener('click', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)])); a.download = 'backup.json'; a.click(); showToast('تم التصدير'); });
+    $('restoreBackupBtn').addEventListener('click', () => $('backupFile').click());
+    $('backupFile').addEventListener('change', e => { const r = new FileReader(); r.onload = ev => { try { appData = JSON.parse(ev.target.result); saveData(); initApp(); showToast('تم الاستعادة'); } catch { showToast('خطأ', 'error'); }}; r.readAsText(e.target.files[0]); });
+});
+
+// Global Aliases for inline events (kept minimal for simplicity)
+window.editTenant = id => openTenantModal(id);
+window.editContract = id => openContractModal(id);
+window.editPayment = id => openPaymentModal(id);
+window.del = del;
+window.openPay = openPay;
+window.notify = notify;
