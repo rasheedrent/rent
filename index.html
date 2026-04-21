@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام إدارة الإيجارات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- شاشة الدخول -->
+<div id="loginScreen" style="display:none">
+    <div class="login-card">
+        <div class="logo-icon"><i class="fas fa-building"></i></div>
+        <h1>نظام إدارة الإيجارات</h1>
+        <p class="sub">تسجيل الدخول</p>
+        <div class="login-error" id="loginError"></div>
+        <form onsubmit="handleLogin(); return false;">
+            <div class="form-group">
+                <label>اسم المستخدم</label>
+                <input type="text" id="loginUser" autocomplete="username">
+                <i class="fas fa-user input-icon"></i>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPass" autocomplete="current-password">
+                <i class="fas fa-lock input-icon"></i>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> دخول</button>
+        </form>
+        <p id="lockoutMsg" class="lockout-msg"></p>
+    </div>
+</div>
+
+<!-- التطبيق -->
+<div id="app" style="display:none">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><div class="s-logo"><i class="fas fa-building"></i></div><h2>الإيجارات</h2></div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-view="dashboard"><i class="fas fa-home"></i> الرئيسية</button>
+            <button class="nav-item" data-view="contracts"><i class="fas fa-file-contract"></i> العقود</button>
+            <button class="nav-item" data-view="payments"><i class="fas fa-money-bill-wave"></i> المدفوعات</button>
+            <button class="nav-item" data-view="countdown"><i class="fas fa-hourglass-half"></i> العداد</button>
+            <button class="nav-item" data-view="notifications"><i class="fas fa-bell"></i> الإشعارات</button>
+            <button class="nav-item" data-view="reports"><i class="fas fa-print"></i> التقارير</button>
+            <button class="nav-item" data-view="settings"><i class="fas fa-cog"></i> الإعدادات</button>
+        </nav>
+        <div class="sidebar-footer"><button class="nav-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button></div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="main-content">
+        <header class="topbar">
+            <div class="topbar-right">
+                <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 id="pageTitle">الرئيسية</h1>
+            </div>
+            <div class="topbar-left">
+                <div class="session-timer"><i class="fas fa-clock"></i> <span id="sessionTimer">30:00</span></div>
+                <button class="btn btn-icon btn-secondary notif-badge" onclick="navigate('notifications')"><i class="fas fa-bell"></i><span class="badge" id="notifCount" style="display:none">0</span></button>
+                <span class="user-display"><i class="fas fa-user-circle"></i> <span id="currentUserDisplay">admin</span></span>
+            </div>
+        </header>
+        <div class="page-content">
+            <!-- لوحة التحكم -->
+            <section id="dashboardView">
+                <div class="stats-grid" id="statsGrid"></div>
+                <div class="section-title"><i class="fas fa-hourglass-half"></i> القادمة</div>
+                <div class="countdown-grid" id="dashCountdown"></div>
+            </section>
+
+            <!-- العقود -->
+            <section id="contractsView" style="display:none">
+                <div class="view-header">
+                    <div class="search-box"><input type="text" id="contractSearch" placeholder="بحث..." oninput="renderContracts()"><i class="fas fa-search"></i></div>
+                    <!-- زر جديد مصحح -->
+                    <button class="btn btn-primary" onclick="openContractModal()"><i class="fas fa-plus"></i> جديد</button>
+                </div>
+                <div class="table-wrapper"><div class="table-scroll"><table>
+                    <thead><tr><th>#</th><th>المستأجر</th><th>العقار</th><th>المبلغ</th><th>الدفع</th><th>البداية</th><th>النهاية</th><th>الحالة</th><th class="no-print">إجراءات</th></tr></thead>
+                    <tbody id="contractsTable"></tbody>
+                </table></div></div>
+            </section>
+
+            <!-- المدفوعات -->
+            <section id="paymentsView" style="display:none">
+                <div class="view-header">
+                    <div class="filters-group">
+                        <select id="payFilterStatus" onchange="renderPayments()"><option value="all">الكل</option><option value="paid">مدفوع</option><option value="pending">قادم</option><option value="overdue">متأخر</option></select>
+                        <div class="search-box"><input type="text" id="paySearch" placeholder="بحث..." oninput="renderPayments()"><i class="fas fa-search"></i></div>
+                    </div>
+                </div>
+                <div class="table-wrapper"><div class="table-scroll"><table>
+                    <thead><tr><th>المستأجر</th><th>العقار</th><th>المبلغ</th><th>الاستحقاق</th><th>الحالة</th><th>الطريقة</th><th>تاريخ الدفع</th><th class="no-print">إجراء</th></tr></thead>
+                    <tbody id="paymentsTable"></tbody>
+                </table></div></div>
+            </section>
+
+            <!-- العداد -->
+            <section id="countdownView" style="display:none">
+                <div class="notif-permission" id="notifPermBox" style="display:none"><i class="fas fa-bell"></i><p>فعّل الإشعارات</p><button class="btn btn-sm btn-primary" onclick="requestNotifPermission()">تفعيل</button></div>
+                <div class="section-title"><i class="fas fa-hourglass-half"></i> العداد التنازلي</div>
+                <div class="countdown-grid" id="fullCountdown"></div>
+            </section>
+
+            <!-- الإشعارات -->
+            <section id="notificationsView" style="display:none">
+                <div class="view-header">
+                    <h2>الإشعارات</h2>
+                    <div class="actions-group">
+                        <button class="btn btn-sm btn-secondary" onclick="markAllRead()"><i class="fas fa-check-double"></i> مقروء</button>
+                        <button class="btn btn-sm btn-primary" onclick="checkAndNotify()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                    </div>
+                </div>
+                <div id="notifList"></div>
+            </section>
+
+            <!-- التقارير -->
+            <section id="reportsView" style="display:none">
+                <div class="card-box" style="margin-bottom: 24px;">
+                    <h2><i class="fas fa-user-tie"></i> كشف حساب</h2>
+                    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+                        <select id="tenantReportSelect" class="select-input"><option value="">اختر المستأجر...</option></select>
+                        <button class="btn btn-primary" onclick="generateTenantStatement()">عرض</button>
+                    </div>
+                </div>
+                <div class="report-cards">
+                    <div class="report-card" onclick="generateReport('contracts')"><i class="fas fa-file-contract"></i><h3>العقود</h3></div>
+                    <div class="report-card" onclick="generateReport('payments')"><i class="fas fa-money-bill-wave"></i><h3>المدفوعات</h3></div>
+                    <div class="report-card" onclick="generateReport('overdue')"><i class="fas fa-exclamation-triangle"></i><h3>المتأخرات</h3></div>
+                </div>
+                <div id="reportOutput" style="margin-top:24px;display:none">
+                    <div class="view-header">
+                        <h2 id="reportTitle"></h2>
+                        <button class="btn btn-sm btn-primary no-print" onclick="window.print()"><i class="fas fa-print"></i> طباعة</button>
+                        <button class="btn btn-sm btn-secondary no-print" onclick="document.getElementById('reportOutput').style.display='none'"><i class="fas fa-times"></i> إغلاق</button>
+                    </div>
+                    <div id="reportContent"></div>
+                </div>
+            </section>
+
+            <!-- الإعدادات -->
+            <section id="settingsView" style="display:none">
+                <div class="settings-grid">
+                    <div class="card-box">
+                        <h2><i class="fas fa-envelope"></i> الإرسال التلقائي (Gmail)</h2>
+                        <p style="font-size:12px; color:var(--muted); margin-bottom:15px">استخدم <a href="https://www.emailjs.com/" target="_blank">EmailJS</a></p>
+                        <div class="form-group"><label>Public Key</label><input type="text" id="emailJsUserId"></div>
+                        <div class="form-group"><label>Service ID</label><input type="text" id="emailJsServiceId"></div>
+                        <div class="form-group"><label>Template ID</label><input type="text" id="emailJsTemplateId"></div>
+                        <div class="form-group"><label>بريد المالك</label><input type="email" id="ownerEmail"></div>
+                        <button class="btn btn-primary" onclick="saveEmailSettings()">حفظ</button>
+                    </div>
+                    <div class="card-box">
+                        <h2><i class="fas fa-key"></i> كلمة المرور</h2>
+                        <div class="form-group"><label>الحالية</label><input type="password" id="oldPass"></div>
+                        <div class="form-group"><label>الجديدة</label><input type="password" id="newPass"></div>
+                        <div class="form-group"><label>التأكيد</label><input type="password" id="confirmPass"></div>
+                        <button class="btn btn-primary" onclick="changePassword()">تغيير</button>
+                    </div>
+                    <div class="card-box">
+                        <h2><i class="fas fa-bell"></i> الإشعارات</h2>
+                        <div class="form-group"><label>أيام التنبيه</label><input type="number" id="notifyDays" value="7"></div>
+                        <div class="permission-status">
+                            <span id="notifPermStatus">غير مفعّلة</span>
+                            <button class="btn btn-sm btn-primary" onclick="requestNotifPermission()">تفعيل</button>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top:10px" onclick="saveSettings()">حفظ</button>
+                    </div>
+                    <div class="card-box">
+                        <h2><i class="fas fa-database"></i> النسخ الاحتياطي</h2>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap">
+                            <button class="btn btn-primary" onclick="backupData()">تنزيل</button>
+                            <input type="file" id="restoreFileInput" accept=".json" style="display:none" onchange="restoreData(event)">
+                            <button class="btn btn-secondary" onclick="document.getElementById('restoreFileInput').click()">استرداد</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- النوافذ -->
+<div class="modal-overlay" id="contractModal">
+    <div class="modal">
+        <div class="modal-head"><h2 id="contractModalTitle">عقد جديد</h2><button class="btn btn-icon" onclick="closeModal('contractModal')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body">
+            <input type="hidden" id="editContractId">
+            <div class="form-row"><div class="form-group"><label>المستأجر</label><input type="text" id="cTenantName"></div><div class="form-group"><label>الجوال</label><input type="tel" id="cPhone"></div></div>
+            <div class="form-group"><label>البريد</label><input type="email" id="cEmail"></div>
+            <div class="form-group"><label>العقار</label><input type="text" id="cProperty"></div>
+            <div class="form-row"><div class="form-group"><label>المبلغ</label><input type="number" id="cAmount"></div><div class="form-group"><label>الدفع</label><select id="cFrequency"><option value="monthly">شهري</option><option value="quarterly">ربعي</option><option value="annual">سنوي</option></select></div></div>
+            <div class="form-row"><div class="form-group"><label>البداية</label><input type="date" id="cStartDate"></div><div class="form-group"><label>النهاية</label><input type="date" id="cEndDate"></div></div>
+            <div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div>
+        </div>
+        <div class="modal-foot"><button class="btn btn-primary" onclick="saveContract()">حفظ</button><button class="btn btn-secondary" onclick="closeModal('contractModal')">إلغاء</button></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="width:300px">
+        <div class="modal-head"><h2>تأكيد</h2><button class="btn btn-icon" onclick="closeModal('deleteModal')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body" style="text-align:center; padding:20px"><p>هل أنت متأكد من الحذف؟</p></div>
+        <div class="modal-foot" style="justify-content:center"><button class="btn btn-danger" id="confirmDeleteBtn">حذف</button><button class="btn btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button></div>
+    </div>
+</div>
+
+<!-- نافذة اختيار طريقة الدفع -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal" style="width:300px">
+        <div class="modal-head"><h2>تأكيد الدفع</h2><button class="btn btn-icon" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body" style="text-align:center; padding:20px">
+            <p style="margin-bottom:15px">اختر طريقة الدفع:</p>
+            <div style="display:flex; gap:10px">
+                <button class="btn btn-primary" style="flex:1" onclick="confirmPaymentMethod('hawala')"><i class="fas fa-university"></i> حوالة</button>
+                <button class="btn btn-secondary" style="flex:1" onclick="confirmPaymentMethod('cash')"><i class="fas fa-money-bill-wave"></i> كاش</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer"></div>
+<script src="script.js"></script>
+</body>
+</html>
