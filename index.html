@@ -23,7 +23,6 @@
         body { font-family: 'Cairo', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; min-height: 100vh; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-secondary); } ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
         
-        /* Login Screen */
         .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0B1120 0%, #0F2027 50%, #0B1120 100%); position: relative; overflow: hidden; padding: 20px; }
         .login-bg-shapes .shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: floatShape 8s ease-in-out infinite; }
         .shape-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; }
@@ -37,7 +36,6 @@
         .login-logo h1 { font-size: 22px; font-weight: 700; }
         .login-logo p { font-size: 13px; color: var(--text-muted); direction: ltr; }
 
-        /* Forms & Inputs */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
         .form-group label i { margin-left: 4px; color: var(--accent); width: 16px; text-align: center; }
@@ -50,7 +48,6 @@
         .error-msg { background: var(--danger-glow); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 10px; color: var(--danger); font-size: 13px; text-align: center; margin-bottom: 12px; }
         .locked-msg { background: var(--danger-glow); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 12px; color: var(--danger); font-size: 13px; text-align: center; margin-bottom: 12px; }
 
-        /* Buttons */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border: none; border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); white-space: nowrap; }
         .btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: var(--accent-hover); }
         .btn-danger { background: var(--danger); color: #fff; } .btn-danger:hover { background: var(--danger-hover); }
@@ -59,7 +56,6 @@
         .btn-ghost { background: transparent; color: var(--text-secondary); } .btn-ghost:hover { background: rgba(255,255,255,0.05); }
         .btn-block { width: 100%; } .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        /* Main App Layout */
         .main-app { display: flex; min-height: 100vh; }
         .sidebar { width: var(--sidebar-w); background: var(--bg-secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; right: 0; bottom: 0; z-index: 100; transition: transform var(--transition); }
         .sidebar-header { padding: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
@@ -76,7 +72,6 @@
         .top-bar h2 { font-size: 18px; font-weight: 700; flex: 1; }
         .user-badge { font-size: 13px; color: var(--text-secondary); } .user-badge i { color: var(--accent); }
 
-        /* Pages */
         .page { display: none; padding: 24px; animation: fadeIn 0.3s ease; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -85,7 +80,6 @@
         .search-box input { width: 100%; padding: 10px 14px 10px 14px; padding-right: 38px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Cairo', sans-serif; font-size: 14px; }
         .search-box input:focus { outline: none; border-color: var(--accent); }
 
-        /* Dashboard Stats */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
         .stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; }
@@ -97,7 +91,6 @@
         .stat-number { display: block; font-size: 26px; font-weight: 800; } .stat-label { font-size: 12px; color: var(--text-muted); }
         .dashboard-section { margin-bottom: 28px; } .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; } .section-title i { color: var(--accent); margin-left: 6px; }
 
-        /* Countdown Cards */
         .countdown-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
         .countdown-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: var(--transition); }
         .countdown-card:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -111,7 +104,6 @@
         .countdown-card.overdue { border-color: var(--danger); } .countdown-card.overdue .cc-time-unit .num { color: var(--danger); }
         .cc-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 
-        /* Tenant & Contract Cards */
         .tenants-grid, .contracts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
         .tenant-card, .contract-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: var(--transition); }
         .tenant-card:hover, .contract-card:hover { border-color: var(--border-light); box-shadow: var(--shadow); }
@@ -127,7 +119,6 @@
         .contract-card .cc-label { color: var(--text-muted); } .contract-card .cc-value { font-weight: 600; }
         .cc-contract-type { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--accent-glow); color: var(--accent); }
 
-        /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s ease; }
         .modal { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-sm { max-width: 440px; } .modal-lg { max-width: 720px; }
@@ -136,19 +127,16 @@
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; } .modal-close:hover { color: var(--danger); }
         .modal-body { padding: 20px; } .modal-footer { padding: 16px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); }
 
-        /* Payment Methods */
         .payment-method-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .payment-method-option input { display: none; }
         .method-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px; background: var(--bg-primary); border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
         .method-card i { font-size: 24px; }
         .payment-method-option input:checked + .method-card { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
 
-        /* Confirm Modal */
         .confirm-modal-content { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; max-width: 400px; text-align: center; }
         .confirm-icon { font-size: 48px; color: var(--amber); margin-bottom: 16px; }
         .confirm-actions { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
 
-        /* Toast */
         .toast-container { position: fixed; top: 20px; left: 20px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
         .toast { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; min-width: 280px; box-shadow: var(--shadow); animation: toastIn 0.3s ease; }
         .toast.success { border-right: 3px solid var(--accent); } .toast.success i { color: var(--accent); }
@@ -156,7 +144,6 @@
         .toast.warning { border-right: 3px solid var(--amber); } .toast.warning i { color: var(--amber); }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Settings & Backup */
         .settings-grid, .backup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
         .settings-card, .backup-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
         .settings-card h3, .backup-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -167,7 +154,6 @@
         .toggle-switch input:checked + label { background: var(--accent); } .toggle-switch input:checked + label::after { right: calc(100% - 23px); }
         .backup-card { text-align: center; } .backup-icon { width: 64px; height: 64px; border-radius: 16px; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
 
-        /* Reports */
         .report-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
         .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .report-summary-item { background: var(--bg-primary); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
@@ -176,7 +162,6 @@
         .report-table th, .report-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); }
         .report-table th { background: var(--bg-primary); color: var(--text-secondary); font-size: 12px; }
         
-        /* Activity & Details */
         .activity-list { display: flex; flex-direction: column; gap: 8px; }
         .activity-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; }
         .act-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -185,7 +170,6 @@
         .detail-item { font-size: 13px; padding: 6px 0; } .detail-item .di-label { color: var(--text-muted); font-size: 11px; } .detail-item .di-value { font-weight: 600; }
         .method-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
         .method-badge.cash { background: var(--accent-glow); color: var(--accent); } .method-badge.transfer { background: rgba(59,130,246,0.15); color: var(--info); }
-
         .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); } .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.3; }
 
         @media print {
@@ -201,9 +185,8 @@
             .report-summary-item .rs-label { color: #555 !important; }
             .report-table th, .report-table td { border: 1px solid #000 !important; color: #000 !important; background: #fff !important; }
             .report-table th { background: #f3f3f3 !important; font-weight: bold; }
-            i.fas, i.fab, i.far, i.fa { display: none !important; } /* إخفاء كل الأيقونات عند الطباعة */
+            i.fas, i.fab, i.far, i.fa { display: none !important; }
         }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); } .sidebar.open { transform: translateX(0); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
             .sidebar-close { display: block; } .main-content { margin-right: 0; } .hamburger { display: block; }
@@ -215,7 +198,6 @@
 </head>
 <body>
 
-<!-- Login Screen -->
 <div id="loginScreen" class="login-screen">
     <div class="login-bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
     <div class="login-card">
@@ -230,7 +212,6 @@
     </div>
 </div>
 
-<!-- Main App -->
 <div id="mainApp" class="main-app" style="display:none">
     <aside id="sidebar" class="sidebar">
         <div class="sidebar-header"><i class="fas fa-building"></i><span class="sidebar-title">إدارة الإيجارات</span><button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></button></div>
@@ -248,7 +229,6 @@
     <main id="mainContent" class="main-content">
         <header class="top-bar"><button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2 id="pageTitle">لوحة المعلومات</h2><div class="top-bar-actions"><span id="currentUser" class="user-badge"><i class="fas fa-user-circle"></i> <span></span></span></div></header>
 
-        <!-- Dashboard -->
         <section id="page-dashboard" class="page active">
             <div class="stats-grid">
                 <div class="stat-card stat-tenants"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><span class="stat-number" id="statTenants">0</span><span class="stat-label">إجمالي المستأجرين</span></div></div>
@@ -260,19 +240,16 @@
             <div class="dashboard-section"><h3 class="section-title"><i class="fas fa-history"></i> آخر العمليات</h3><div id="recentActivity" class="activity-list"></div></div>
         </section>
 
-        <!-- Tenants -->
         <section id="page-tenants" class="page">
             <div class="page-header"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="tenantSearch" placeholder="بحث عن مستأجر..." oninput="refreshTenantsList()"></div><button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة مستأجر</button></div>
             <div id="tenantsList" class="tenants-grid"></div>
         </section>
 
-        <!-- Contracts -->
         <section id="page-contracts" class="page">
             <div class="page-header"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="contractSearch" placeholder="بحث في العقود..." oninput="refreshContractsList()"></div><button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة عقد</button></div>
             <div id="contractsList" class="contracts-grid"></div>
         </section>
 
-        <!-- Reports -->
         <section id="page-reports" class="page">
             <div class="page-header">
                 <div class="form-group" style="margin:0;min-width:150px"><select id="reportTenantFilter" onchange="generateReport()" style="padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);border-radius:8px"><option value="all">الكل</option></select></div>
@@ -282,7 +259,6 @@
             <div id="reportContent" class="report-container"></div>
         </section>
 
-        <!-- Notifications -->
         <section id="page-notifications" class="page">
             <div class="settings-grid">
                 <div class="settings-card">
@@ -303,9 +279,10 @@
                     <button class="btn btn-outline" onclick="testBrowserNotification()" style="margin-right:8px"><i class="fas fa-vibrate"></i> اختبار</button>
                 </div>
                 <div class="settings-card" style="grid-column: 1 / -1">
-                    <h3><i class="fas fa-language"></i> محتوى الإشعار</h3>
+                    <h3><i class="fas fa-language"></i> محتوى الإشعار (يتم إرسال العربية والإنجليزية معاً في رسالة واحدة)</h3>
                     <div class="form-group"><label>عنوان الإشعار (عربي)</label><input type="text" id="notifTitleAr" value="تذكير بدفع الإيجار"></div>
                     <div class="form-group"><label>نص الإشعار (المتغيرات: {name}, {property}, {amount}, {date}, {days})</label><textarea id="notifBodyAr" rows="3">السلام عليكم {name}، نود تذكيركم بأن إيجار العقار {property} بمبلغ {amount} مستحق الدفع خلال {days} يوم. تاريخ الاستحقاق: {date}</textarea></div>
+                    <hr style="border-color: var(--border); margin: 16px 0;">
                     <div class="form-group"><label>Notification Title (English)</label><input type="text" id="notifTitleEn" value="Rent Payment Reminder"></div>
                     <div class="form-group"><label>Notification Body</label><textarea id="notifBodyEn" rows="3">Dear {name}, this is a reminder that the rent for {property} with amount {amount} is due in {days} days. Due date: {date}</textarea></div>
                     <button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ المحتوى</button>
@@ -313,7 +290,6 @@
             </div>
         </section>
 
-        <!-- Backup -->
         <section id="page-backup" class="page">
             <div class="backup-grid">
                 <div class="backup-card"><div class="backup-icon"><i class="fas fa-download"></i></div><h3>حفظ نسخة احتياطية</h3><p>تنزيل جميع بيانات التطبيق كملف JSON</p><button class="btn btn-primary" onclick="backupData()"><i class="fas fa-download"></i> تنزيل النسخة</button></div>
@@ -321,7 +297,6 @@
             </div>
         </section>
 
-        <!-- Settings -->
         <section id="page-settings" class="page">
             <div class="settings-grid">
                 <div class="settings-card">
@@ -347,373 +322,104 @@
     </main>
 </div>
 
-<!-- Modals -->
-<div id="tenantModal" class="modal-overlay" style="display:none">
-    <div class="modal">
-        <div class="modal-header"><h3 id="tenantModalTitle">إضافة مستأجر جديد</h3><button class="modal-close" onclick="closeTenantModal()"><i class="fas fa-times"></i></button></div>
-        <form id="tenantForm" onsubmit="saveTenant(event)">
-            <input type="hidden" id="tenantId">
-            <div class="modal-body">
-                <div class="form-row"><div class="form-group"><label><i class="fas fa-user"></i> اسم المستأجر</label><input type="text" id="tenantName" required></div><div class="form-group"><label><i class="fas fa-phone"></i> رقم الهاتف</label><input type="tel" id="tenantPhone"></div></div>
-                <div class="form-row"><div class="form-group"><label><i class="fas fa-envelope"></i> البريد</label><input type="email" id="tenantEmail"></div><div class="form-group"><label><i class="fab fa-whatsapp"></i> واتساب</label><input type="text" id="tenantWhatsapp"></div></div>
-                <div class="form-row"><div class="form-group"><label><i class="fas fa-map-marker-alt"></i> العقار</label><input type="text" id="tenantProperty" required></div><div class="form-group"><label><i class="fas fa-door-open"></i> رقم الوحدة</label><input type="text" id="tenantUnit"></div></div>
-                <div class="form-row"><div class="form-group"><label><i class="fas fa-money-bill-wave"></i> مبلغ الإيجار</label><input type="number" id="tenantRent" required min="0"></div><div class="form-group"><label><i class="fas fa-calendar-alt"></i> نوع الدفع</label><select id="tenantContractType" required><option value="monthly">شهري</option><option value="quarterly">ربع سنوي</option><option value="semiannual">نصف سنوي</option><option value="annual">سنوي</option></select></div></div>
-                <div class="form-row">
-                    <div class="form-group"><label><i class="fas fa-play-circle"></i> بداية العقد</label><input type="date" lang="en-US" id="tenantStartDate" required></div>
-                    <div class="form-group"><label><i class="fas fa-stop-circle"></i> نهاية العقد</label><input type="date" lang="en-US" id="tenantEndDate" required></div>
-                </div>
-                <div class="form-group"><label><i class="fas fa-sticky-note"></i> ملاحظات</label><textarea id="tenantNotes" rows="2"></textarea></div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-ghost" onclick="closeTenantModal()">إلغاء</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button></div>
-        </form>
-    </div>
-</div>
-
-<div id="paymentModal" class="modal-overlay" style="display:none">
-    <div class="modal modal-sm">
-        <div class="modal-header"><h3><i class="fas fa-hand-holding-usd"></i> تسجيل دفعة</h3><button class="modal-close" onclick="closePaymentModal()"><i class="fas fa-times"></i></button></div>
-        <form id="paymentForm" onsubmit="savePayment(event)">
-            <input type="hidden" id="paymentTenantId">
-            <div class="modal-body">
-                <div id="paymentTenantInfo" style="background:var(--bg-primary);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px"></div>
-                <div class="form-group"><label>مبلغ الدفعة</label><input type="number" id="paymentAmount" required min="0"></div>
-                <div class="form-group"><label>تاريخ الدفع</label><input type="date" lang="en-US" id="paymentDate" required></div>
-                <div class="form-group"><label>الفترة</label><input type="text" id="paymentPeriod" placeholder="مثال: يناير 2024"></div>
-                <div class="form-group"><label>طريقة الدفع</label><div class="payment-method-btns"><label class="payment-method-option"><input type="radio" name="paymentMethod" value="cash" checked><div class="method-card"><i class="fas fa-money-bill-wave"></i><span>نقدي</span></div></label><label class="payment-method-option"><input type="radio" name="paymentMethod" value="transfer"><div class="method-card"><i class="fas fa-exchange-alt"></i><span>حوالة</span></div></label></div></div>
-                <div class="form-group"><label>ملاحظات</label><textarea id="paymentNotes" rows="2"></textarea></div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-ghost" onclick="closePaymentModal()">إلغاء</button><button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> تسجيل</button></div>
-        </form>
-    </div>
-</div>
-
-<div id="tenantDetailModal" class="modal-overlay" style="display:none">
-    <div class="modal modal-lg">
-        <div class="modal-header"><h3 id="detailModalTitle">تفاصيل المستأجر</h3><button class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></button></div>
-        <div class="modal-body" id="detailModalBody"></div>
-        <div class="modal-footer"><button class="btn btn-ghost" onclick="closeDetailModal()">إغلاق</button></div>
-    </div>
-</div>
-
-<div id="confirmModal" class="modal-overlay" style="display:none">
-    <div class="confirm-modal-content">
-        <div class="confirm-icon"><i class="fas fa-exclamation-circle"></i></div>
-        <h3 id="confirmTitle">تأكيد الحذف</h3>
-        <p id="confirmMessage" style="color:var(--text-muted)"></p>
-        <div class="confirm-actions"><button class="btn btn-ghost" onclick="closeConfirmModal()">إلغاء</button><button class="btn btn-danger" id="confirmAction">حذف</button></div>
-    </div>
-</div>
-
+<div id="tenantModal" class="modal-overlay" style="display:none"><div class="modal"><div class="modal-header"><h3 id="tenantModalTitle">إضافة مستأجر جديد</h3><button class="modal-close" onclick="closeTenantModal()"><i class="fas fa-times"></i></button></div><form id="tenantForm" onsubmit="saveTenant(event)"><input type="hidden" id="tenantId"><div class="modal-body"><div class="form-row"><div class="form-group"><label><i class="fas fa-user"></i> اسم المستأجر</label><input type="text" id="tenantName" required></div><div class="form-group"><label><i class="fas fa-phone"></i> رقم الهاتف</label><input type="tel" id="tenantPhone"></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-envelope"></i> البريد</label><input type="email" id="tenantEmail"></div><div class="form-group"><label><i class="fab fa-whatsapp"></i> واتساب</label><input type="text" id="tenantWhatsapp"></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-map-marker-alt"></i> العقار</label><input type="text" id="tenantProperty" required></div><div class="form-group"><label><i class="fas fa-door-open"></i> رقم الوحدة</label><input type="text" id="tenantUnit"></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-money-bill-wave"></i> مبلغ الإيجار</label><input type="number" id="tenantRent" required min="0"></div><div class="form-group"><label><i class="fas fa-calendar-alt"></i> نوع الدفع</label><select id="tenantContractType" required><option value="monthly">شهري</option><option value="quarterly">ربع سنوي</option><option value="semiannual">نصف سنوي</option><option value="annual">سنوي</option></select></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-play-circle"></i> بداية العقد</label><input type="date" lang="en-US" id="tenantStartDate" required></div><div class="form-group"><label><i class="fas fa-stop-circle"></i> نهاية العقد</label><input type="date" lang="en-US" id="tenantEndDate" required></div></div><div class="form-group"><label><i class="fas fa-sticky-note"></i> ملاحظات</label><textarea id="tenantNotes" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-ghost" onclick="closeTenantModal()">إلغاء</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ</button></div></form></div></div>
+<div id="paymentModal" class="modal-overlay" style="display:none"><div class="modal modal-sm"><div class="modal-header"><h3><i class="fas fa-hand-holding-usd"></i> تسجيل دفعة</h3><button class="modal-close" onclick="closePaymentModal()"><i class="fas fa-times"></i></button></div><form id="paymentForm" onsubmit="savePayment(event)"><input type="hidden" id="paymentTenantId"><div class="modal-body"><div id="paymentTenantInfo" style="background:var(--bg-primary);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px"></div><div class="form-group"><label>مبلغ الدفعة</label><input type="number" id="paymentAmount" required min="0"></div><div class="form-group"><label>تاريخ الدفع</label><input type="date" lang="en-US" id="paymentDate" required></div><div class="form-group"><label>الفترة</label><input type="text" id="paymentPeriod" placeholder="مثال: يناير 2024"></div><div class="form-group"><label>طريقة الدفع</label><div class="payment-method-btns"><label class="payment-method-option"><input type="radio" name="paymentMethod" value="cash" checked><div class="method-card"><i class="fas fa-money-bill-wave"></i><span>نقدي</span></div></label><label class="payment-method-option"><input type="radio" name="paymentMethod" value="transfer"><div class="method-card"><i class="fas fa-exchange-alt"></i><span>حوالة</span></div></label></div></div><div class="form-group"><label>ملاحظات</label><textarea id="paymentNotes" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-ghost" onclick="closePaymentModal()">إلغاء</button><button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> تسجيل</button></div></form></div></div>
+<div id="tenantDetailModal" class="modal-overlay" style="display:none"><div class="modal modal-lg"><div class="modal-header"><h3 id="detailModalTitle">تفاصيل المستأجر</h3><button class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="detailModalBody"></div><div class="modal-footer"><button class="btn btn-ghost" onclick="closeDetailModal()">إغلاق</button></div></div></div>
+<div id="confirmModal" class="modal-overlay" style="display:none"><div class="confirm-modal-content"><div class="confirm-icon"><i class="fas fa-exclamation-circle"></i></div><h3 id="confirmTitle">تأكيد الحذف</h3><p id="confirmMessage" style="color:var(--text-muted)"></p><div class="confirm-actions"><button class="btn btn-ghost" onclick="closeConfirmModal()">إلغاء</button><button class="btn btn-danger" id="confirmAction">حذف</button></div></div></div>
 <div id="toastContainer" class="toast-container"></div>
 
 <script>
-    // ========== الحالة العامة ==========
     const APP_KEY = 'rentManagementApp';
-    let appState = {
-        user: { username: 'admin', password: 'admin123' },
-        loginAttempts: 0, isLocked: false, lockTime: null,
-        tenants: [], activities: [],
-        settings: {
-            maxLoginAttempts: 5, currency: 'ر.س', notifyDaysBefore: 7,
-            emailjsServiceId: '', emailjsTemplateId: '', emailjsUserId: '',
-            ownerEmail: '', ownerWhatsapp: '', browserNotifications: false,
-            notifTitleAr: 'تذكير بدفع الإيجار',
-            notifBodyAr: 'السلام عليكم {name}، نود تذكيركم بأن إيجار العقار {property} بمبلغ {amount} مستحق الدفع خلال {days} يوم.\nتاريخ الاستحقاق: {date}\nشكراً لتعاونكم.',
-            notifTitleEn: 'Rent Payment Reminder',
-            notifBodyEn: 'Dear {name},\nThis is a reminder that the rent for {property} with amount {amount} is due in {days} days.\nDue date: {date}\nThank you for your cooperation.'
-        }
-    };
+    let appState = { user: { username: 'admin', password: 'admin123' }, loginAttempts: 0, isLocked: false, lockTime: null, tenants: [], activities: [], settings: { maxLoginAttempts: 5, currency: 'ر.س', notifyDaysBefore: 7, emailjsServiceId: '', emailjsTemplateId: '', emailjsUserId: '', ownerEmail: '', ownerWhatsapp: '', browserNotifications: false, notifTitleAr: 'تذكير بدفع الإيجار', notifBodyAr: 'السلام عليكم {name}، نود تذكيركم بأن إيجار العقار {property} بمبلغ {amount} مستحق الدفع خلال {days} يوم. تاريخ الاستحقاق: {date}', notifTitleEn: 'Rent Payment Reminder', notifBodyEn: 'Dear {name}, this is a reminder that the rent for {property} with amount {amount} is due in {days} days. Due date: {date}' } };
 
     function loadAppState() { try { const s = localStorage.getItem(APP_KEY); if(s) { const p = JSON.parse(s); appState = { ...appState, ...p, settings: { ...appState.settings, ...(p.settings || {}) } }; } } catch(e){} }
     function saveAppState() { try { localStorage.setItem(APP_KEY, JSON.stringify(appState)); } catch(e){ showToast('خطأ في حفظ البيانات', 'error'); } }
+    function init() { loadAppState(); checkLockStatus(); checkAutoLogin(); addSampleData(); if(appState.settings.emailjsUserId) { try { emailjs.init(appState.settings.emailjsUserId); } catch(e){} } setInterval(checkUpcomingPayments, 30 * 60 * 1000); }
 
-    function init() {
-        loadAppState(); 
-        checkLockStatus(); 
-        checkAutoLogin();
-        addSampleData(); // إضافة بيانات تجريبية
-        if(appState.settings.emailjsUserId) { try { emailjs.init(appState.settings.emailjsUserId); } catch(e){} }
-        setInterval(checkUpcomingPayments, 30 * 60 * 1000);
-    }
+    function addSampleData() { if(appState.tenants.length === 0) { const today = new Date(); const s1 = new Date(today.getFullYear(), today.getMonth() - 2, 1); const e1 = new Date(today.getFullYear(), today.getMonth() + 10, 1); appState.tenants.push({ id: generateId(), name: 'أحمد محمد', phone: '0501234567', email: 'ahmed@example.com', whatsapp: '966501234567', property: 'فيلا الياسمين', unit: '1', rentAmount: 5000, contractType: 'monthly', startDate: s1.toISOString().split('T')[0], endDate: e1.toISOString().split('T')[0], notes: '', payments: [{id:'p1', date: s1.toISOString().split('T')[0], amount: 5000, period: 'الشهر الأول', method: 'transfer', notes: ''}], nextPaymentDate: '' }); appState.tenants[0].nextPaymentDate = calculateNextPayment(appState.tenants[0].startDate, 'monthly'); const s2 = new Date(today.getFullYear(), today.getMonth() - 5, 15); const e2 = new Date(today.getFullYear(), today.getMonth() + 7, 15); appState.tenants.push({ id: generateId(), name: 'عمر خالد', phone: '0557654321', email: 'omar@example.com', whatsapp: '966557654321', property: 'برج النخيل', unit: '405', rentAmount: 15000, contractType: 'quarterly', startDate: s2.toISOString().split('T')[0], endDate: e2.toISOString().split('T')[0], notes: '', payments: [{id:'p2', date: s2.toISOString().split('T')[0], amount: 15000, period: 'الربع الأول', method: 'cash', notes: ''}], nextPaymentDate: '' }); appState.tenants[1].nextPaymentDate = calculateNextPayment(appState.tenants[1].startDate, 'quarterly'); saveAppState(); } }
 
-    // ========== بيانات تجريبية ==========
-    function addSampleData() {
-        if(appState.tenants.length === 0) {
-            const today = new Date();
-            const start1 = new Date(today.getFullYear(), today.getMonth() - 2, 1);
-            const end1 = new Date(today.getFullYear(), today.getMonth() + 10, 1);
-            
-            appState.tenants.push({
-                id: generateId(), name: 'أحمد محمد', phone: '0501234567', email: 'ahmed@example.com', whatsapp: '966501234567',
-                property: 'فيلا الياسمين', unit: '1', rentAmount: 5000, contractType: 'monthly',
-                startDate: start1.toISOString().split('T')[0], endDate: end1.toISOString().split('T')[0],
-                notes: 'مستأجر ملتزم', payments: [{id: 'p_sample1', date: start1.toISOString().split('T')[0], amount: 5000, period: 'الشهر الأول', method: 'transfer', notes: ''}], nextPaymentDate: ''
-            });
-            appState.tenants[0].nextPaymentDate = calculateNextPayment(appState.tenants[0].startDate, 'monthly');
-
-            const start2 = new Date(today.getFullYear(), today.getMonth() - 5, 15);
-            const end2 = new Date(today.getFullYear(), today.getMonth() + 7, 15);
-            
-            appState.tenants.push({
-                id: generateId(), name: 'عمر خالد', phone: '0557654321', email: 'omar@example.com', whatsapp: '966557654321',
-                property: 'برج النخيل', unit: '405', rentAmount: 15000, contractType: 'quarterly',
-                startDate: start2.toISOString().split('T')[0], endDate: end2.toISOString().split('T')[0],
-                notes: 'دفع ربع سنوي', payments: [{id: 'p_sample2', date: start2.toISOString().split('T')[0], amount: 15000, period: 'الربع الأول', method: 'cash', notes: ''}], nextPaymentDate: ''
-            });
-            appState.tenants[1].nextPaymentDate = calculateNextPayment(appState.tenants[1].startDate, 'quarterly');
-
-            saveAppState();
-        }
-    }
-
-    // ========== تسجيل الدخول ==========
-    function checkLockStatus() {
-        if(appState.isLocked && appState.lockTime) {
-            if(Date.now() - appState.lockTime < 5*60*1000) {
-                document.getElementById('loginLocked').style.display = 'block';
-                document.getElementById('loginBtn').disabled = true;
-            } else { appState.isLocked = false; appState.loginAttempts = 0; saveAppState(); document.getElementById('loginLocked').style.display = 'none'; document.getElementById('loginBtn').disabled = false; }
-        }
-    }
+    function checkLockStatus() { if(appState.isLocked && appState.lockTime) { if(Date.now() - appState.lockTime < 5*60*1000) { document.getElementById('loginLocked').style.display = 'block'; document.getElementById('loginBtn').disabled = true; } else { appState.isLocked = false; appState.loginAttempts = 0; saveAppState(); document.getElementById('loginLocked').style.display = 'none'; document.getElementById('loginBtn').disabled = false; } } }
     function checkAutoLogin() { if(localStorage.getItem('rentSession') === 'active') showMainApp(); }
-    function handleLogin(e) {
-        e.preventDefault();
-        if(appState.isLocked) return;
-        const u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value;
-        if(u === appState.user.username && p === appState.user.password) {
-            appState.loginAttempts = 0; saveAppState(); localStorage.setItem('rentSession', 'active'); showMainApp();
-        } else {
-            appState.loginAttempts++; const rem = appState.settings.maxLoginAttempts - appState.loginAttempts;
-            if(rem <= 0) { appState.isLocked = true; appState.lockTime = Date.now(); saveAppState(); document.getElementById('loginLocked').style.display = 'block'; document.getElementById('loginBtn').disabled = true; document.getElementById('loginError').style.display = 'none'; }
-            else { const el = document.getElementById('loginError'); el.textContent = `بيانات خاطئة. محاولات متبقية: ${rem}`; el.style.display = 'block'; }
-            saveAppState();
-        }
-    }
+    function handleLogin(e) { e.preventDefault(); if(appState.isLocked) return; const u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value; if(u === appState.user.username && p === appState.user.password) { appState.loginAttempts = 0; saveAppState(); localStorage.setItem('rentSession', 'active'); showMainApp(); } else { appState.loginAttempts++; const rem = appState.settings.maxLoginAttempts - appState.loginAttempts; if(rem <= 0) { appState.isLocked = true; appState.lockTime = Date.now(); saveAppState(); document.getElementById('loginLocked').style.display = 'block'; document.getElementById('loginBtn').disabled = true; document.getElementById('loginError').style.display = 'none'; } else { const el = document.getElementById('loginError'); el.textContent = `بيانات خاطئة. محاولات متبقية: ${rem}`; el.style.display = 'block'; } saveAppState(); } }
     function handleLogout() { localStorage.removeItem('rentSession'); document.getElementById('mainApp').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex'; }
     function showMainApp() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('mainApp').style.display = 'flex'; document.getElementById('currentUser').querySelector('span').textContent = appState.user.username; refreshDashboard(); populateReportFilter(); loadSettingsUI(); }
     function togglePasswordVisibility(id, btn) { const i = document.getElementById(id); const ic = btn.querySelector('i'); if(i.type==='password'){i.type='text';ic.className='fas fa-eye-slash';}else{i.type='password';ic.className='fas fa-eye';} }
 
-    // ========== التنقل ==========
     const pageTitles = { dashboard:'لوحة المعلومات', tenants:'المستأجرون', contracts:'العقود', reports:'التقارير', notifications:'الإشعارات', backup:'النسخ الاحتياطي', settings:'الإعدادات' };
-    function navigateTo(page, el) {
-        document.getElementById('pageTitle').textContent = pageTitles[page];
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-'+page).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if(el) el.classList.add('active');
-        closeSidebar();
-        if(page==='dashboard') refreshDashboard(); if(page==='tenants') refreshTenantsList(); if(page==='contracts') refreshContractsList(); if(page==='reports') generateReport();
-    }
+    function navigateTo(page, el) { document.getElementById('pageTitle').textContent = pageTitles[page]; document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if(el) el.classList.add('active'); closeSidebar(); if(page==='dashboard') refreshDashboard(); if(page==='tenants') refreshTenantsList(); if(page==='contracts') refreshContractsList(); if(page==='reports') generateReport(); }
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
     function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
 
-    // ========== المستأجرون ==========
     function generateId() { return 't_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
-    function openTenantModal(id) {
-        document.getElementById('tenantForm').reset(); document.getElementById('tenantId').value = '';
-        if(id) {
-            const t = appState.tenants.find(x=>x.id===id); if(!t) return;
-            document.getElementById('tenantModalTitle').textContent = 'تعديل بيانات المستأجر';
-            document.getElementById('tenantId').value = t.id; document.getElementById('tenantName').value = t.name;
-            document.getElementById('tenantPhone').value = t.phone||''; document.getElementById('tenantEmail').value = t.email||'';
-            document.getElementById('tenantWhatsapp').value = t.whatsapp||''; document.getElementById('tenantProperty').value = t.property;
-            document.getElementById('tenantUnit').value = t.unit||''; document.getElementById('tenantRent').value = t.rentAmount;
-            document.getElementById('tenantContractType').value = t.contractType; document.getElementById('tenantStartDate').value = t.startDate;
-            document.getElementById('tenantEndDate').value = t.endDate; document.getElementById('tenantNotes').value = t.notes||'';
-        } else { document.getElementById('tenantModalTitle').textContent = 'إضافة مستأجر جديد'; }
-        document.getElementById('tenantModal').style.display = 'flex';
-    }
+    function openTenantModal(id) { document.getElementById('tenantForm').reset(); document.getElementById('tenantId').value = ''; if(id) { const t = appState.tenants.find(x=>x.id===id); if(!t) return; document.getElementById('tenantModalTitle').textContent = 'تعديل بيانات المستأجر'; document.getElementById('tenantId').value = t.id; document.getElementById('tenantName').value = t.name; document.getElementById('tenantPhone').value = t.phone||''; document.getElementById('tenantEmail').value = t.email||''; document.getElementById('tenantWhatsapp').value = t.whatsapp||''; document.getElementById('tenantProperty').value = t.property; document.getElementById('tenantUnit').value = t.unit||''; document.getElementById('tenantRent').value = t.rentAmount; document.getElementById('tenantContractType').value = t.contractType; document.getElementById('tenantStartDate').value = t.startDate; document.getElementById('tenantEndDate').value = t.endDate; document.getElementById('tenantNotes').value = t.notes||''; } else { document.getElementById('tenantModalTitle').textContent = 'إضافة مستأجر جديد'; } document.getElementById('tenantModal').style.display = 'flex'; }
     function closeTenantModal() { document.getElementById('tenantModal').style.display = 'none'; }
-    function saveTenant(e) {
-        e.preventDefault(); const id = document.getElementById('tenantId').value;
-        const data = { name: document.getElementById('tenantName').value.trim(), phone: document.getElementById('tenantPhone').value.trim(), email: document.getElementById('tenantEmail').value.trim(), whatsapp: document.getElementById('tenantWhatsapp').value.trim(), property: document.getElementById('tenantProperty').value.trim(), unit: document.getElementById('tenantUnit').value.trim(), rentAmount: parseFloat(document.getElementById('tenantRent').value), contractType: document.getElementById('tenantContractType').value, startDate: document.getElementById('tenantStartDate').value, endDate: document.getElementById('tenantEndDate').value, notes: document.getElementById('tenantNotes').value.trim(), payments: [], nextPaymentDate: '' };
-        data.nextPaymentDate = calculateNextPayment(data.startDate, data.contractType);
-        if(id) { const i = appState.tenants.findIndex(t=>t.id===id); if(i!==-1) { data.payments = appState.tenants[i].payments; data.id = id; appState.tenants[i] = data; addActivity('تعديل مستأجر: '+data.name, 'new'); } }
-        else { data.id = generateId(); appState.tenants.push(data); addActivity('إضافة مستأجر: '+data.name, 'new'); }
-        saveAppState(); closeTenantModal(); refreshTenantsList(); refreshDashboard(); showToast('تم الحفظ بنجاح', 'success');
-    }
+    function saveTenant(e) { e.preventDefault(); const id = document.getElementById('tenantId').value; const data = { name: document.getElementById('tenantName').value.trim(), phone: document.getElementById('tenantPhone').value.trim(), email: document.getElementById('tenantEmail').value.trim(), whatsapp: document.getElementById('tenantWhatsapp').value.trim(), property: document.getElementById('tenantProperty').value.trim(), unit: document.getElementById('tenantUnit').value.trim(), rentAmount: parseFloat(document.getElementById('tenantRent').value), contractType: document.getElementById('tenantContractType').value, startDate: document.getElementById('tenantStartDate').value, endDate: document.getElementById('tenantEndDate').value, notes: document.getElementById('tenantNotes').value.trim(), payments: [], nextPaymentDate: '' }; data.nextPaymentDate = calculateNextPayment(data.startDate, data.contractType); if(id) { const i = appState.tenants.findIndex(t=>t.id===id); if(i!==-1) { data.payments = appState.tenants[i].payments; data.id = id; appState.tenants[i] = data; addActivity('تعديل مستأجر: '+data.name, 'new'); } } else { data.id = generateId(); appState.tenants.push(data); addActivity('إضافة مستأجر: '+data.name, 'new'); } saveAppState(); closeTenantModal(); refreshTenantsList(); refreshDashboard(); showToast('تم الحفظ بنجاح', 'success'); }
     function deleteTenant(id) { const t = appState.tenants.find(x=>x.id===id); showConfirm('تأكيد حذف المستأجر', `هل أنت متأكد من حذف "${t.name}"؟`, ()=>{ appState.tenants = appState.tenants.filter(x=>x.id!==id); addActivity('حذف مستأجر: '+t.name, 'delete'); saveAppState(); refreshTenantsList(); refreshDashboard(); showToast('تم الحذف', 'success'); }); }
     function calculateNextPayment(start, type) { const s = new Date(start), n = new Date(), nx = new Date(s); const m = {monthly:1,quarterly:3,semiannual:6,annual:12}[type]||1; while(nx<=n) nx.setMonth(nx.getMonth()+m); return nx.toISOString().split('T')[0]; }
     function getContractTypeLabel(t) { return {monthly:'شهري',quarterly:'ربع سنوي',semiannual:'نصف سنوي',annual:'سنوي'}[t]||t; }
     function getTenantStatus(t) { return new Date(t.endDate) < new Date() ? 'expired' : 'active'; }
     function getStatusLabel(s) { return {active:'نشط',expired:'منتهي'}[s]||s; }
 
-    function refreshTenantsList() {
-        const c = document.getElementById('tenantsList'), q = (document.getElementById('tenantSearch')?.value||'').toLowerCase();
-        let list = appState.tenants; if(q) list = list.filter(t=>t.name.toLowerCase().includes(q)||t.property.toLowerCase().includes(q));
-        if(!list.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-user-plus"></i><p>لا يوجد مستأجرون</p></div>'; return; }
-        c.innerHTML = list.map(t=>{ const st = getTenantStatus(t); return `<div class="tenant-card"><div class="tc-header"><div><div class="tc-name">${escHtml(t.name)}</div><div class="tc-property"><i class="fas fa-map-marker-alt"></i> ${escHtml(t.property)}</div></div><span class="tc-status ${st}">${getStatusLabel(st)}</span></div><div class="tc-details"><div class="tc-detail"><i class="fas fa-phone"></i> ${escHtml(t.phone||'-')}</div><div class="tc-detail"><i class="fas fa-calendar-alt"></i> ${getContractTypeLabel(t.contractType)}</div><div class="tc-detail"><i class="fas fa-play-circle"></i> ${t.startDate}</div><div class="tc-detail"><i class="fas fa-stop-circle"></i> ${t.endDate}</div></div><div class="tc-rent">${formatNumber(t.rentAmount)} <small>${appState.settings.currency}</small></div><div class="tc-actions"><button class="btn btn-primary btn-sm" onclick="openPaymentModal('${t.id}')"><i class="fas fa-hand-holding-usd"></i> دفع</button><button class="btn btn-outline btn-sm" onclick="showTenantDetail('${t.id}')"><i class="fas fa-eye"></i></button><button class="btn btn-ghost btn-sm" onclick="openTenantModal('${t.id}')"><i class="fas fa-edit"></i></button><button class="btn btn-ghost btn-sm" onclick="deleteTenant('${t.id}')" style="color:var(--danger)"><i class="fas fa-trash"></i></button></div></div>`; }).join('');
-    }
-
-    function showTenantDetail(id) {
-        const t = appState.tenants.find(x=>x.id===id); if(!t) return; const cur = appState.settings.currency, st = getTenantStatus(t), tot = t.payments.reduce((s,p)=>s+p.amount,0);
-        document.getElementById('detailModalTitle').textContent = 'تفاصيل: '+t.name;
-        let ph = t.payments.length ? `<table class="report-table"><thead><tr><th>التاريخ</th><th>المبلغ</th><th>الفترة</th><th>الطريقة</th><th></th></tr></thead><tbody>${t.payments.map(p=>`<tr><td>${p.date}</td><td>${formatNumber(p.amount)} ${cur}</td><td>${escHtml(p.period||'-')}</td><td><span class="method-badge ${p.method}">${p.method==='cash'?'نقدي':'حوالة'}</span></td><td><button class="btn btn-ghost btn-sm" onclick="deletePayment('${t.id}','${p.id}')" style="color:var(--danger)"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>` : '<div class="empty-state"><p>لا توجد دفعات</p></div>';
-        document.getElementById('detailModalBody').innerHTML = `<div class="detail-section"><h4>بيانات المستأجر</h4><div class="detail-grid"><div class="detail-item"><div class="di-label">الاسم</div><div class="di-value">${escHtml(t.name)}</div></div><div class="detail-item"><div class="di-label">الهاتف</div><div class="di-value">${escHtml(t.phone||'-')}</div></div><div class="detail-item"><div class="di-label">الإيجار</div><div class="di-value">${formatNumber(t.rentAmount)} ${cur}</div></div><div class="detail-item"><div class="di-label">الدفع التالي</div><div class="di-value">${t.nextPaymentDate||'-'}</div></div></div></div><div class="detail-section"><h4>سجل الدفعات (الإجمالي: ${formatNumber(tot)} ${cur})</h4>${ph}</div>`;
-        document.getElementById('tenantDetailModal').style.display = 'flex';
-    }
+    function refreshTenantsList() { const c = document.getElementById('tenantsList'), q = (document.getElementById('tenantSearch')?.value||'').toLowerCase(); let list = appState.tenants; if(q) list = list.filter(t=>t.name.toLowerCase().includes(q)||t.property.toLowerCase().includes(q)); if(!list.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-user-plus"></i><p>لا يوجد مستأجرون</p></div>'; return; } c.innerHTML = list.map(t=>{ const st = getTenantStatus(t); return `<div class="tenant-card"><div class="tc-header"><div><div class="tc-name">${escHtml(t.name)}</div><div class="tc-property"><i class="fas fa-map-marker-alt"></i> ${escHtml(t.property)}</div></div><span class="tc-status ${st}">${getStatusLabel(st)}</span></div><div class="tc-details"><div class="tc-detail"><i class="fas fa-phone"></i> ${escHtml(t.phone||'-')}</div><div class="tc-detail"><i class="fas fa-calendar-alt"></i> ${getContractTypeLabel(t.contractType)}</div><div class="tc-detail"><i class="fas fa-play-circle"></i> ${t.startDate}</div><div class="tc-detail"><i class="fas fa-stop-circle"></i> ${t.endDate}</div></div><div class="tc-rent">${formatNumber(t.rentAmount)} <small>${appState.settings.currency}</small></div><div class="tc-actions"><button class="btn btn-primary btn-sm" onclick="openPaymentModal('${t.id}')"><i class="fas fa-hand-holding-usd"></i> دفع</button><button class="btn btn-outline btn-sm" onclick="showTenantDetail('${t.id}')"><i class="fas fa-eye"></i></button><button class="btn btn-ghost btn-sm" onclick="openTenantModal('${t.id}')"><i class="fas fa-edit"></i></button><button class="btn btn-ghost btn-sm" onclick="deleteTenant('${t.id}')" style="color:var(--danger)"><i class="fas fa-trash"></i></button></div></div>`; }).join(''); }
+    function showTenantDetail(id) { const t = appState.tenants.find(x=>x.id===id); if(!t) return; const cur = appState.settings.currency, st = getTenantStatus(t), tot = t.payments.reduce((s,p)=>s+p.amount,0); document.getElementById('detailModalTitle').textContent = 'تفاصيل: '+t.name; let ph = t.payments.length ? `<table class="report-table"><thead><tr><th>التاريخ</th><th>المبلغ</th><th>الفترة</th><th>الطريقة</th><th></th></tr></thead><tbody>${t.payments.map(p=>`<tr><td>${p.date}</td><td>${formatNumber(p.amount)} ${cur}</td><td>${escHtml(p.period||'-')}</td><td><span class="method-badge ${p.method}">${p.method==='cash'?'نقدي':'حوالة'}</span></td><td><button class="btn btn-ghost btn-sm" onclick="deletePayment('${t.id}','${p.id}')" style="color:var(--danger)"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>` : '<div class="empty-state"><p>لا توجد دفعات</p></div>'; document.getElementById('detailModalBody').innerHTML = `<div class="detail-section"><h4>بيانات المستأجر</h4><div class="detail-grid"><div class="detail-item"><div class="di-label">الاسم</div><div class="di-value">${escHtml(t.name)}</div></div><div class="detail-item"><div class="di-label">الهاتف</div><div class="di-value">${escHtml(t.phone||'-')}</div></div><div class="detail-item"><div class="di-label">الإيجار</div><div class="di-value">${formatNumber(t.rentAmount)} ${cur}</div></div><div class="detail-item"><div class="di-label">الدفع التالي</div><div class="di-value">${t.nextPaymentDate||'-'}</div></div></div></div><div class="detail-section"><h4>سجل الدفعات (الإجمالي: ${formatNumber(tot)} ${cur})</h4>${ph}</div>`; document.getElementById('tenantDetailModal').style.display = 'flex'; }
     function closeDetailModal() { document.getElementById('tenantDetailModal').style.display = 'none'; }
 
-    // ========== الدفع ==========
-    function openPaymentModal(tid) {
-        const t = appState.tenants.find(x=>x.id===tid); if(!t) return;
-        document.getElementById('paymentTenantId').value = tid; document.getElementById('paymentAmount').value = t.rentAmount;
-        document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('paymentPeriod').value = ''; document.getElementById('paymentNotes').value = '';
-        document.getElementById('paymentTenantInfo').innerHTML = `<strong>${escHtml(t.name)}</strong> - ${escHtml(t.property)}<br>الإيجار: ${formatNumber(t.rentAmount)} ${appState.settings.currency}`;
-        document.getElementById('paymentModal').style.display = 'flex';
-    }
+    function openPaymentModal(tid) { const t = appState.tenants.find(x=>x.id===tid); if(!t) return; document.getElementById('paymentTenantId').value = tid; document.getElementById('paymentAmount').value = t.rentAmount; document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0]; document.getElementById('paymentPeriod').value = ''; document.getElementById('paymentNotes').value = ''; document.getElementById('paymentTenantInfo').innerHTML = `<strong>${escHtml(t.name)}</strong> - ${escHtml(t.property)}<br>الإيجار: ${formatNumber(t.rentAmount)} ${appState.settings.currency}`; document.getElementById('paymentModal').style.display = 'flex'; }
     function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
-    function savePayment(e) {
-        e.preventDefault(); const tid = document.getElementById('paymentTenantId').value, t = appState.tenants.find(x=>x.id===tid); if(!t) return;
-        const pay = { id:'p_'+Date.now(), date:document.getElementById('paymentDate').value, amount:parseFloat(document.getElementById('paymentAmount').value), period:document.getElementById('paymentPeriod').value.trim(), method:document.querySelector('input[name="paymentMethod"]:checked').value, notes:document.getElementById('paymentNotes').value.trim() };
-        t.payments.push(pay); t.nextPaymentDate = calculateNextPayment(t.startDate, t.contractType);
-        addActivity(`دفعة ${pay.method==='cash'?'نقدي':'حوالة'}: ${t.name} - ${formatNumber(pay.amount)}`, 'payment');
-        saveAppState(); closePaymentModal(); refreshTenantsList(); refreshDashboard(); showToast('تم تسجيل الدفعة', 'success');
-    }
+    function savePayment(e) { e.preventDefault(); const tid = document.getElementById('paymentTenantId').value, t = appState.tenants.find(x=>x.id===tid); if(!t) return; const pay = { id:'p_'+Date.now(), date:document.getElementById('paymentDate').value, amount:parseFloat(document.getElementById('paymentAmount').value), period:document.getElementById('paymentPeriod').value.trim(), method:document.querySelector('input[name="paymentMethod"]:checked').value, notes:document.getElementById('paymentNotes').value.trim() }; t.payments.push(pay); t.nextPaymentDate = calculateNextPayment(t.startDate, t.contractType); addActivity(`دفعة ${pay.method==='cash'?'نقدي':'حوالة'}: ${t.name} - ${formatNumber(pay.amount)}`, 'payment'); saveAppState(); closePaymentModal(); refreshTenantsList(); refreshDashboard(); showToast('تم تسجيل الدفعة', 'success'); }
     function deletePayment(tid, pid) { showConfirm('حذف الدفعة','هل أنت متأكد من حذف هذه الدفعة؟',()=>{ const t=appState.tenants.find(x=>x.id===tid); if(t){t.payments=t.payments.filter(p=>p.id!==pid); saveAppState(); showTenantDetail(tid); refreshDashboard();} }); }
 
-    // ========== لوحة المعلومات ==========
-    function refreshDashboard() {
-        const ts = appState.tenants, cur = appState.settings.currency, now = new Date();
-        const rev = ts.reduce((s,t)=>{ if(getTenantStatus(t)==='active'){ const m={monthly:1,quarterly:3,semiannual:6,annual:12}[t.contractType]||1; return s+(t.rentAmount/m); } return s; },0);
-        const up = ts.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate&&daysUntil(t.nextPaymentDate)>=0&&daysUntil(t.nextPaymentDate)<=(appState.settings.notifyDaysBefore||7));
-        const ov = ts.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate&&daysUntil(t.nextPaymentDate)<0);
-        document.getElementById('statTenants').textContent = ts.length;
-        document.getElementById('statRevenue').textContent = formatNumber(Math.round(rev));
-        document.getElementById('statUpcoming').textContent = up.length;
-        document.getElementById('statOverdue').textContent = ov.length;
-        refreshCountdowns(); refreshActivities();
-    }
-    function refreshCountdowns() {
-        const c = document.getElementById('countdownContainer'), ts = appState.tenants.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate);
-        if(!ts.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>لا مدفوعات قادمة</p></div>'; return; }
-        ts.sort((a,b) => new Date(a.nextPaymentDate)-new Date(b.nextPaymentDate));
-        c.innerHTML = ts.map(t=>{ const d=daysUntil(t.nextPaymentDate), ov=d<0, ad=Math.abs(d); return `<div class="countdown-card ${ov?'overdue':''}"><div class="cc-header"><div><div class="cc-name">${escHtml(t.name)}</div><div class="cc-property">${escHtml(t.property)}</div></div><div class="cc-amount">${formatNumber(t.rentAmount)} ${appState.settings.currency}</div></div><div class="cc-timer"><div class="cc-time-unit"><span class="num">${ov?'-':''}${ad}</span><span class="label">يوم</span></div></div><div style="font-size:11px;color:var(--text-muted);margin-top:8px"><i class="fas fa-calendar"></i> ${ov?'متأخر منذ':'استحقاق'}: ${t.nextPaymentDate}</div><div class="cc-actions"><button class="btn btn-primary btn-sm" onclick="openPaymentModal('${t.id}')"><i class="fas fa-hand-holding-usd"></i> دفع</button><button class="btn btn-outline btn-sm" onclick="sendWhatsAppToTenant('${t.id}')"><i class="fab fa-whatsapp"></i> واتساب</button><button class="btn btn-outline btn-sm" onclick="sendEmailToTenant('${t.id}')"><i class="fas fa-envelope"></i> إيميل</button></div></div>`; }).join('');
-    }
-    function refreshActivities() {
-        const c = document.getElementById('recentActivity'), acts = appState.activities.slice(-10).reverse();
-        if(!acts.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-list"></i><p>لا عمليات بعد</p></div>'; return; }
-        c.innerHTML = acts.map(a=>`<div class="activity-item"><div class="act-icon ${a.type}"><i class="fas ${a.type==='payment'?'fa-check':a.type==='new'?'fa-plus':'fa-trash'}"></i></div><div style="flex:1">${escHtml(a.text)}</div><div style="color:var(--text-muted);font-size:11px">${a.time||''}</div></div>`).join('');
-    }
+    function refreshDashboard() { const ts = appState.tenants, cur = appState.settings.currency; const rev = ts.reduce((s,t)=>{ if(getTenantStatus(t)==='active'){ const m={monthly:1,quarterly:3,semiannual:6,annual:12}[t.contractType]||1; return s+(t.rentAmount/m); } return s; },0); const up = ts.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate&&daysUntil(t.nextPaymentDate)>=0&&daysUntil(t.nextPaymentDate)<=(appState.settings.notifyDaysBefore||7)); const ov = ts.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate&&daysUntil(t.nextPaymentDate)<0); document.getElementById('statTenants').textContent = ts.length; document.getElementById('statRevenue').textContent = formatNumber(Math.round(rev)); document.getElementById('statUpcoming').textContent = up.length; document.getElementById('statOverdue').textContent = ov.length; refreshCountdowns(); refreshActivities(); }
+    function refreshCountdowns() { const c = document.getElementById('countdownContainer'), ts = appState.tenants.filter(t=>getTenantStatus(t)==='active'&&t.nextPaymentDate); if(!ts.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>لا مدفوعات قادمة</p></div>'; return; } ts.sort((a,b) => new Date(a.nextPaymentDate)-new Date(b.nextPaymentDate)); c.innerHTML = ts.map(t=>{ const d=daysUntil(t.nextPaymentDate), ov=d<0, ad=Math.abs(d); return `<div class="countdown-card ${ov?'overdue':''}"><div class="cc-header"><div><div class="cc-name">${escHtml(t.name)}</div><div class="cc-property">${escHtml(t.property)}</div></div><div class="cc-amount">${formatNumber(t.rentAmount)} ${appState.settings.currency}</div></div><div class="cc-timer"><div class="cc-time-unit"><span class="num">${ov?'-':''}${ad}</span><span class="label">يوم</span></div></div><div style="font-size:11px;color:var(--text-muted);margin-top:8px"><i class="fas fa-calendar"></i> ${ov?'متأخر منذ':'استحقاق'}: ${t.nextPaymentDate}</div><div class="cc-actions"><button class="btn btn-primary btn-sm" onclick="openPaymentModal('${t.id}')"><i class="fas fa-hand-holding-usd"></i> دفع</button><button class="btn btn-outline btn-sm" onclick="sendWhatsAppToTenant('${t.id}')"><i class="fab fa-whatsapp"></i> واتساب</button><button class="btn btn-outline btn-sm" onclick="sendEmailToTenant('${t.id}')"><i class="fas fa-envelope"></i> إيميل</button></div></div>`; }).join(''); }
+    function refreshActivities() { const c = document.getElementById('recentActivity'), acts = appState.activities.slice(-10).reverse(); if(!acts.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-list"></i><p>لا عمليات بعد</p></div>'; return; } c.innerHTML = acts.map(a=>`<div class="activity-item"><div class="act-icon ${a.type}"><i class="fas ${a.type==='payment'?'fa-check':a.type==='new'?'fa-plus':'fa-trash'}"></i></div><div style="flex:1">${escHtml(a.text)}</div><div style="color:var(--text-muted);font-size:11px">${a.time||''}</div></div>`).join(''); }
     function addActivity(text, type) { const now=new Date(); appState.activities.push({text, type, time: now.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'})}); if(appState.activities.length>50) appState.activities=appState.activities.slice(-50); }
 
-    // ========== العقود ==========
-    function refreshContractsList() {
-        const c = document.getElementById('contractsList'), q = (document.getElementById('contractSearch')?.value||'').toLowerCase();
-        let list = appState.tenants; if(q) list = list.filter(t=>t.name.toLowerCase().includes(q)||t.property.toLowerCase().includes(q));
-        if(!list.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-file-contract"></i><p>لا توجد عقود</p></div>'; return; }
-        c.innerHTML = list.map(t=>`<div class="contract-card"><div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700">${escHtml(t.name)}</div><div style="font-size:12px;color:var(--text-muted)">${escHtml(t.property)}</div></div><span class="tc-status ${getTenantStatus(t)}">${getStatusLabel(getTenantStatus(t))}</span></div><div style="padding:16px 20px"><div class="cc-row"><span class="cc-label">نوع الدفع</span><span class="cc-contract-type">${getContractTypeLabel(t.contractType)}</span></div><div class="cc-row"><span class="cc-label">الإيجار</span><span class="cc-value">${formatNumber(t.rentAmount)} ${appState.settings.currency}</span></div><div class="cc-row"><span class="cc-label">بداية العقد</span><span class="cc-value">${t.startDate}</span></div><div class="cc-row"><span class="cc-label">نهاية العقد</span><span class="cc-value">${t.endDate}</span></div><div class="cc-row"><span class="cc-label">إجمالي المدفوع</span><span class="cc-value" style="color:var(--accent)">${formatNumber(t.payments.reduce((s,p)=>s+p.amount,0))} ${appState.settings.currency}</span></div></div></div>`).join('');
-    }
+    function refreshContractsList() { const c = document.getElementById('contractsList'), q = (document.getElementById('contractSearch')?.value||'').toLowerCase(); let list = appState.tenants; if(q) list = list.filter(t=>t.name.toLowerCase().includes(q)||t.property.toLowerCase().includes(q)); if(!list.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-file-contract"></i><p>لا توجد عقود</p></div>'; return; } c.innerHTML = list.map(t=>`<div class="contract-card"><div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700">${escHtml(t.name)}</div><div style="font-size:12px;color:var(--text-muted)">${escHtml(t.property)}</div></div><span class="tc-status ${getTenantStatus(t)}">${getStatusLabel(getTenantStatus(t))}</span></div><div style="padding:16px 20px"><div class="cc-row"><span class="cc-label">نوع الدفع</span><span class="cc-contract-type">${getContractTypeLabel(t.contractType)}</span></div><div class="cc-row"><span class="cc-label">الإيجار</span><span class="cc-value">${formatNumber(t.rentAmount)} ${appState.settings.currency}</span></div><div class="cc-row"><span class="cc-label">بداية العقد</span><span class="cc-value">${t.startDate}</span></div><div class="cc-row"><span class="cc-label">نهاية العقد</span><span class="cc-value">${t.endDate}</span></div><div class="cc-row"><span class="cc-label">إجمالي المدفوع</span><span class="cc-value" style="color:var(--accent)">${formatNumber(t.payments.reduce((s,p)=>s+p.amount,0))} ${appState.settings.currency}</span></div></div></div>`).join(''); }
 
-    // ========== التقارير ==========
     function populateReportFilter() { const s = document.getElementById('reportTenantFilter'); s.innerHTML = '<option value="all">الكل</option>'; appState.tenants.forEach(t => s.innerHTML += `<option value="${t.id}">${escHtml(t.name)}</option>`); }
-    function generateReport() {
-        const tf = document.getElementById('reportTenantFilter').value, pf = document.getElementById('reportPeriodFilter').value, cur = appState.settings.currency;
-        let ts = appState.tenants; if(tf!=='all') ts = ts.filter(t=>t.id===tf);
-        let pays = []; const now = new Date();
-        ts.forEach(t => t.payments.forEach(p => { let inc = true; const d = new Date(p.date); if(pf==='month') inc = d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); else if(pf==='year') inc = d.getFullYear()===now.getFullYear(); if(inc) pays.push({tenantName:t.name, property:t.property, ...p}); }));
-        const tot = pays.reduce((s,p)=>s+p.amount,0), cash = pays.filter(p=>p.method==='cash').reduce((s,p)=>s+p.amount,0), trans = pays.filter(p=>p.method==='transfer').reduce((s,p)=>s+p.amount,0);
-        document.getElementById('reportContent').innerHTML = `<div class="report-summary"><div class="report-summary-item"><div class="rs-value">${pays.length}</div><div class="rs-label">عدد الدفعات</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(tot)}</div><div class="rs-label">الإجمالي (${cur})</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(cash)}</div><div class="rs-label">نقدي (${cur})</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(trans)}</div><div class="rs-label">حوالة (${cur})</div></div></div>${pays.length?`<table class="report-table"><thead><tr><th>المستأجر</th><th>التاريخ</th><th>المبلغ</th><th>الطريقة</th><th>الفترة</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escHtml(p.tenantName)}</td><td>${p.date}</td><td>${formatNumber(p.amount)} ${cur}</td><td>${p.method==='cash'?'نقدي':'حوالة'}</td><td>${escHtml(p.period||'-')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><p>لا دفعات</p></div>'}`;
-    }
+    function generateReport() { const tf = document.getElementById('reportTenantFilter').value, pf = document.getElementById('reportPeriodFilter').value, cur = appState.settings.currency; let ts = appState.tenants; if(tf!=='all') ts = ts.filter(t=>t.id===tf); let pays = []; const now = new Date(); ts.forEach(t => t.payments.forEach(p => { let inc = true; const d = new Date(p.date); if(pf==='month') inc = d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); else if(pf==='year') inc = d.getFullYear()===now.getFullYear(); if(inc) pays.push({tenantName:t.name, property:t.property, ...p}); })); const tot = pays.reduce((s,p)=>s+p.amount,0), cash = pays.filter(p=>p.method==='cash').reduce((s,p)=>s+p.amount,0), trans = pays.filter(p=>p.method==='transfer').reduce((s,p)=>s+p.amount,0); document.getElementById('reportContent').innerHTML = `<div class="report-summary"><div class="report-summary-item"><div class="rs-value">${pays.length}</div><div class="rs-label">عدد الدفعات</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(tot)}</div><div class="rs-label">الإجمالي (${cur})</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(cash)}</div><div class="rs-label">نقدي (${cur})</div></div><div class="report-summary-item"><div class="rs-value">${formatNumber(trans)}</div><div class="rs-label">حوالة (${cur})</div></div></div>${pays.length?`<table class="report-table"><thead><tr><th>المستأجر</th><th>التاريخ</th><th>المبلغ</th><th>الطريقة</th><th>الفترة</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escHtml(p.tenantName)}</td><td>${p.date}</td><td>${formatNumber(p.amount)} ${cur}</td><td>${p.method==='cash'?'نقدي':'حوالة'}</td><td>${escHtml(p.period||'-')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><p>لا دفعات</p></div>'}`; }
     function printReport() { generateReport(); window.print(); }
 
-    // ========== الإشعارات ==========
-    function loadSettingsUI() {
+    // ========== دمج الإشعارات بالعربي والإنجليزي في رسالة واحدة ==========
+    function getFormattedMessage(template, t, days) {
         const s = appState.settings;
-        document.getElementById('emailjsServiceId').value = s.emailjsServiceId||'';
-        document.getElementById('emailjsTemplateId').value = s.emailjsTemplateId||'';
-        document.getElementById('emailjsUserId').value = s.emailjsUserId||'';
-        document.getElementById('ownerEmail').value = s.ownerEmail||'';
-        document.getElementById('ownerWhatsapp').value = s.ownerWhatsapp||'';
-        document.getElementById('notifyDaysBefore').value = s.notifyDaysBefore||7;
-        document.getElementById('browserNotifications').checked = s.browserNotifications||false;
-        document.getElementById('notifTitleAr').value = s.notifTitleAr||'';
-        document.getElementById('notifBodyAr').value = s.notifBodyAr||'';
-        document.getElementById('notifTitleEn').value = s.notifTitleEn||'';
-        document.getElementById('notifBodyEn').value = s.notifBodyEn||'';
-        document.getElementById('maxLoginAttempts').value = s.maxLoginAttempts||5;
-        document.getElementById('settingsUsername').value = appState.user.username;
-        document.getElementById('currencySelect').value = s.currency||'ر.س';
-    }
-    function saveNotificationSettings() {
-        appState.settings.emailjsServiceId = document.getElementById('emailjsServiceId').value.trim();
-        appState.settings.emailjsTemplateId = document.getElementById('emailjsTemplateId').value.trim();
-        appState.settings.emailjsUserId = document.getElementById('emailjsUserId').value.trim();
-        appState.settings.ownerEmail = document.getElementById('ownerEmail').value.trim();
-        appState.settings.ownerWhatsapp = document.getElementById('ownerWhatsapp').value.trim();
-        appState.settings.notifyDaysBefore = parseInt(document.getElementById('notifyDaysBefore').value)||7;
-        appState.settings.browserNotifications = document.getElementById('browserNotifications').checked;
-        appState.settings.notifTitleAr = document.getElementById('notifTitleAr').value;
-        appState.settings.notifBodyAr = document.getElementById('notifBodyAr').value;
-        appState.settings.notifTitleEn = document.getElementById('notifTitleEn').value;
-        appState.settings.notifBodyEn = document.getElementById('notifBodyEn').value;
-        if(appState.settings.emailjsUserId) { try { emailjs.init(appState.settings.emailjsUserId); } catch(e){} }
-        saveAppState(); showToast('تم حفظ إعدادات الإشعارات', 'success');
-    }
-    function requestBrowserNotificationPermission() {
-        if(!('Notification' in window)) { showToast('المتصفح لا يدعم الإشعارات', 'warning'); document.getElementById('browserNotifications').checked = false; return; }
-        Notification.requestPermission().then(p => { if(p!=='granted') { document.getElementById('browserNotifications').checked = false; showToast('تم رفض الإذن', 'warning'); } });
-    }
-    function testBrowserNotification() {
-        if(!('Notification' in window)) { showToast('المتصفح لا يدعم الإشعارات', 'warning'); return; }
-        Notification.requestPermission().then(p => { if(p==='granted') new Notification('نظام الإيجارات', {body: 'إشعار تجريبي يعمل بنجاح!'}); else showToast('لم يتم السماح بالإشعارات', 'warning'); });
-    }
-    function testEmailNotification() {
-        const s = appState.settings; if(!s.emailjsServiceId||!s.emailjsTemplateId||!s.emailjsUserId) { showToast('أكمل إعدادات EmailJS', 'warning'); return; }
-        try { emailjs.send(s.emailjsServiceId, s.emailjsTemplateId, { to_email: s.ownerEmail, tenant_name: 'تجريبي', property: 'عقار تجريبي', amount: '5000', due_date: new Date().toLocaleDateString('ar-SA'), days_left: '7' }).then(()=>showToast('تم إرسال الإشعار', 'success')).catch(err=>showToast('فشل الإرسال: '+err.text, 'error')); } catch(e){ showToast('خطأ', 'error'); }
-    }
-    function sendWhatsAppToTenant(id) {
-        const t = appState.tenants.find(x=>x.id===id); if(!t) return;
-        const phone = t.whatsapp || appState.settings.ownerWhatsapp; if(!phone) { showToast('لا يوجد رقم واتساب', 'warning'); return; }
-        const s = appState.settings, d = daysUntil(t.nextPaymentDate);
-        const msg = s.notifBodyAr.replace('{name}',t.name).replace('{property}',t.property).replace('{amount}',formatNumber(t.rentAmount)+' '+s.currency).replace('{date}',t.nextPaymentDate).replace('{days}',Math.abs(d));
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-    function sendEmailToTenant(id) {
-        const t = appState.tenants.find(x=>x.id===id); if(!t) return;
-        const email = t.email || appState.settings.ownerEmail; if(!email) { showToast('لا يوجد بريد إلكتروني', 'warning'); return; }
-        const s = appState.settings, d = daysUntil(t.nextPaymentDate);
-        const subject = encodeURIComponent(s.notifTitleAr);
-        const body = encodeURIComponent(s.notifBodyAr.replace('{name}',t.name).replace('{property}',t.property).replace('{amount}',formatNumber(t.rentAmount)+' '+s.currency).replace('{date}',t.nextPaymentDate).replace('{days}',Math.abs(d)));
-        window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
-    }
-    function checkUpcomingPayments() {
-        if(!localStorage.getItem('rentSession')) return;
-        const s = appState.settings;
-        appState.tenants.forEach(t => {
-            if(getTenantStatus(t)!=='active'||!t.nextPaymentDate) return;
-            const d = daysUntil(t.nextPaymentDate);
-            if(d>=0 && d<=s.notifyDaysBefore && s.browserNotifications && Notification.permission==='granted') new Notification(s.notifTitleAr, {body: `${t.name} - متبقي ${d} يوم`, tag:'rent-'+t.id});
-            if(d>=0 && d<=s.notifyDaysBefore && s.emailjsServiceId && s.emailjsUserId) { try { emailjs.send(s.emailjsServiceId, s.emailjsTemplateId, { to_email: s.ownerEmail, tenant_name: t.name, property: t.property, amount: formatNumber(t.rentAmount), due_date: t.nextPaymentDate, days_left: d.toString() }).catch(()=>{}); } catch(e){} }
-        });
+        return template
+            .replaceAll('{name}', t.name || 'Test')
+            .replaceAll('{property}', t.property || 'Test Property')
+            .replaceAll('{amount}', formatNumber(t.rentAmount || 0) + ' ' + s.currency)
+            .replaceAll('{date}', t.nextPaymentDate || '-')
+            .replaceAll('{days}', Math.abs(days).toString());
     }
 
-    // ========== الإعدادات ==========
-    function saveSecuritySettings() {
-        const ma = parseInt(document.getElementById('maxLoginAttempts').value); if(ma>=1&&ma<=10) appState.settings.maxLoginAttempts = ma;
-        const nu = document.getElementById('settingsUsername').value.trim(); if(nu) appState.user.username = nu;
-        const cp = document.getElementById('settingsCurrentPass').value, np = document.getElementById('settingsNewPass').value, cfp = document.getElementById('settingsConfirmPass').value;
-        if(cp||np||cfp) { if(cp!==appState.user.password){showToast('كلمة المرور الحالية غير صحيحة','error');return;} if(np.length<4){showToast('كلمة المرور قصيرة','error');return;} if(np!==cfp){showToast('كلمتا المرور غير متطابقتين','error');return;} appState.user.password = np; }
-        saveAppState(); showToast('تم حفظ إعدادات الأمان', 'success'); document.getElementById('settingsCurrentPass').value=''; document.getElementById('settingsNewPass').value=''; document.getElementById('settingsConfirmPass').value='';
+    function getCombinedMessage(t, days) {
+        const s = appState.settings;
+        const msgAr = getFormattedMessage(s.notifBodyAr, t, days);
+        const msgEn = getFormattedMessage(s.notifBodyEn, t, days);
+        return msgAr + "\n\n-------------------\n\n" + msgEn;
     }
+
+    function loadSettingsUI() { const s = appState.settings; document.getElementById('emailjsServiceId').value = s.emailjsServiceId||''; document.getElementById('emailjsTemplateId').value = s.emailjsTemplateId||''; document.getElementById('emailjsUserId').value = s.emailjsUserId||''; document.getElementById('ownerEmail').value = s.ownerEmail||''; document.getElementById('ownerWhatsapp').value = s.ownerWhatsapp||''; document.getElementById('notifyDaysBefore').value = s.notifyDaysBefore||7; document.getElementById('browserNotifications').checked = s.browserNotifications||false; document.getElementById('notifTitleAr').value = s.notifTitleAr||''; document.getElementById('notifBodyAr').value = s.notifBodyAr||''; document.getElementById('notifTitleEn').value = s.notifTitleEn||''; document.getElementById('notifBodyEn').value = s.notifBodyEn||''; document.getElementById('maxLoginAttempts').value = s.maxLoginAttempts||5; document.getElementById('settingsUsername').value = appState.user.username; document.getElementById('currencySelect').value = s.currency||'ر.س'; }
+    function saveNotificationSettings() { appState.settings.emailjsServiceId = document.getElementById('emailjsServiceId').value.trim(); appState.settings.emailjsTemplateId = document.getElementById('emailjsTemplateId').value.trim(); appState.settings.emailjsUserId = document.getElementById('emailjsUserId').value.trim(); appState.settings.ownerEmail = document.getElementById('ownerEmail').value.trim(); appState.settings.ownerWhatsapp = document.getElementById('ownerWhatsapp').value.trim(); appState.settings.notifyDaysBefore = parseInt(document.getElementById('notifyDaysBefore').value)||7; appState.settings.browserNotifications = document.getElementById('browserNotifications').checked; appState.settings.notifTitleAr = document.getElementById('notifTitleAr').value; appState.settings.notifBodyAr = document.getElementById('notifBodyAr').value; appState.settings.notifTitleEn = document.getElementById('notifTitleEn').value; appState.settings.notifBodyEn = document.getElementById('notifBodyEn').value; if(appState.settings.emailjsUserId) { try { emailjs.init(appState.settings.emailjsUserId); } catch(e){} } saveAppState(); showToast('تم حفظ إعدادات الإشعارات', 'success'); }
+    
+    function requestBrowserNotificationPermission() { if(!('Notification' in window)) { showToast('المتصفح لا يدعم الإشعارات', 'warning'); document.getElementById('browserNotifications').checked = false; return; } Notification.requestPermission().then(p => { if(p!=='granted') { document.getElementById('browserNotifications').checked = false; showToast('تم رفض الإذن', 'warning'); } }); }
+    
+    function testBrowserNotification() { if(!('Notification' in window)) { showToast('المتصفح لا يدعم الإشعارات', 'warning'); return; } Notification.requestPermission().then(p => { if(p==='granted') { const mockT = {name:'أحمد', property:'فيلا الياسمين', rentAmount:5000, nextPaymentDate: new Date().toISOString().split('T')[0]}; const body = getCombinedMessage(mockT, 7); new Notification(appState.settings.notifTitleAr + ' / ' + appState.settings.notifTitleEn, {body: body}); } else showToast('لم يتم السماح بالإشعارات', 'warning'); }); }
+    
+    function testEmailNotification() { const s = appState.settings; if(!s.emailjsServiceId||!s.emailjsTemplateId||!s.emailjsUserId) { showToast('أكمل إعدادات EmailJS', 'warning'); return; } try { const mockT = {name:'تجريبي', property:'عقار تجريبي', rentAmount:5000, nextPaymentDate: new Date().toISOString().split('T')[0]}; emailjs.send(s.emailjsServiceId, s.emailjsTemplateId, { to_email: s.ownerEmail, subject: s.notifTitleAr + ' / ' + s.notifTitleEn, message: getCombinedMessage(mockT, 7) }).then(()=>showToast('تم إرسال الإشعار', 'success')).catch(err=>showToast('فشل الإرسال: '+err.text, 'error')); } catch(e){ showToast('خطأ', 'error'); } }
+    
+    function sendWhatsAppToTenant(id) { const t = appState.tenants.find(x=>x.id===id); if(!t) return; const phone = t.whatsapp || appState.settings.ownerWhatsapp; if(!phone) { showToast('لا يوجد رقم واتساب', 'warning'); return; } const d = daysUntil(t.nextPaymentDate); const msg = encodeURIComponent(getCombinedMessage(t, d)); window.open(`https://wa.me/${phone}?text=${msg}`, '_blank'); }
+    
+    function sendEmailToTenant(id) { const t = appState.tenants.find(x=>x.id===id); if(!t) return; const email = t.email || appState.settings.ownerEmail; if(!email) { showToast('لا يوجد بريد إلكتروني', 'warning'); return; } const s = appState.settings, d = daysUntil(t.nextPaymentDate); const subject = encodeURIComponent(s.notifTitleAr + ' / ' + s.notifTitleEn); const body = encodeURIComponent(getCombinedMessage(t, d)); window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank'); }
+    
+    function checkUpcomingPayments() { if(!localStorage.getItem('rentSession')) return; const s = appState.settings; appState.tenants.forEach(t => { if(getTenantStatus(t)!=='active'||!t.nextPaymentDate) return; const d = daysUntil(t.nextPaymentDate); if(d>=0 && d<=s.notifyDaysBefore && s.browserNotifications && Notification.permission==='granted') { const title = s.notifTitleAr + ' / ' + s.notifTitleEn; const body = getCombinedMessage(t, d); new Notification(title, {body: body, tag:'rent-'+t.id}); } if(d>=0 && d<=s.notifyDaysBefore && s.emailjsServiceId && s.emailjsUserId) { try { emailjs.send(s.emailjsServiceId, s.emailjsTemplateId, { to_email: s.ownerEmail, tenant_name: t.name, property: t.property, amount: formatNumber(t.rentAmount), due_date: t.nextPaymentDate, days_left: d.toString(), subject: s.notifTitleAr + ' / ' + s.notifTitleEn, message: getCombinedMessage(t, d) }).catch(()=>{}); } catch(e){} } }); }
+
+    function saveSecuritySettings() { const ma = parseInt(document.getElementById('maxLoginAttempts').value); if(ma>=1&&ma<=10) appState.settings.maxLoginAttempts = ma; const nu = document.getElementById('settingsUsername').value.trim(); if(nu) appState.user.username = nu; const cp = document.getElementById('settingsCurrentPass').value, np = document.getElementById('settingsNewPass').value, cfp = document.getElementById('settingsConfirmPass').value; if(cp||np||cfp) { if(cp!==appState.user.password){showToast('كلمة المرور الحالية غير صحيحة','error');return;} if(np.length<4){showToast('كلمة المرور قصيرة','error');return;} if(np!==cfp){showToast('كلمتا المرور غير متطابقتين','error');return;} appState.user.password = np; } saveAppState(); showToast('تم حفظ إعدادات الأمان', 'success'); document.getElementById('settingsCurrentPass').value=''; document.getElementById('settingsNewPass').value=''; document.getElementById('settingsConfirmPass').value=''; }
     function saveGeneralSettings() { appState.settings.currency = document.getElementById('currencySelect').value; saveAppState(); refreshDashboard(); showToast('تم الحفظ', 'success'); }
     function confirmDeleteAll() { showConfirm('حذف جميع البيانات','سيتم حذف كل شيء نهائياً. هل أنت متأكد؟',()=>{ appState.tenants=[]; appState.activities=[]; saveAppState(); refreshDashboard(); refreshTenantsList(); populateReportFilter(); showToast('تم حذف جميع البيانات', 'success'); }); }
 
-    // ========== النسخ الاحتياطي ==========
-    function backupData() {
-        const blob = new Blob([JSON.stringify(appState, null, 2)], {type:'application/json'}), url = URL.createObjectURL(blob), a = document.createElement('a');
-        a.href = url; a.download = 'rent_backup_'+new Date().toISOString().split('T')[0]+'.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        showToast('تم تنزيل النسخة الاحتياطية', 'success');
-    }
-    function restoreData(event) {
-        const file = event.target.files[0]; if(!file) return;
-        showConfirm('استعادة نسخة احتياطية','سيتم استبدال البيانات الحالية. هل أنت متأكد؟',()=>{
-            const r = new FileReader(); r.onload = function(e) { try { const d = JSON.parse(e.target.result); if(d.tenants) { appState=d; saveAppState(); refreshDashboard(); refreshTenantsList(); populateReportFilter(); loadSettingsUI(); showToast('تم استعادة البيانات', 'success'); } else showToast('ملف غير صالح', 'error'); } catch(err) { showToast('خطأ في قراءة الملف', 'error'); } }; r.readAsText(file);
-        }); event.target.value = '';
-    }
+    function backupData() { const blob = new Blob([JSON.stringify(appState, null, 2)], {type:'application/json'}), url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = 'rent_backup_'+new Date().toISOString().split('T')[0]+'.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); showToast('تم تنزيل النسخة الاحتياطية', 'success'); }
+    function restoreData(event) { const file = event.target.files[0]; if(!file) return; showConfirm('استعادة نسخة احتياطية','سيتم استبدال البيانات الحالية. هل أنت متأكد؟',()=>{ const r = new FileReader(); r.onload = function(e) { try { const d = JSON.parse(e.target.result); if(d.tenants) { appState=d; saveAppState(); refreshDashboard(); refreshTenantsList(); populateReportFilter(); loadSettingsUI(); showToast('تم استعادة البيانات', 'success'); } else showToast('ملف غير صالح', 'error'); } catch(err) { showToast('خطأ في قراءة الملف', 'error'); } }; r.readAsText(file); }); event.target.value = ''; }
 
-    // ========== أدوات مساعدة ==========
     function escHtml(s) { if(!s) return ''; const d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
     function formatNumber(n) { return isNaN(n)?'0':Number(n).toLocaleString('en-US'); }
     function daysUntil(ds) { const t=new Date(ds),n=new Date(); n.setHours(0,0,0,0); t.setHours(0,0,0,0); return Math.ceil((t-n)/(1000*60*60*24)); }
@@ -721,13 +427,7 @@
     let confirmCallback = null;
     function showConfirm(title, msg, cb) { document.getElementById('confirmTitle').textContent=title; document.getElementById('confirmMessage').textContent=msg; confirmCallback=cb; document.getElementById('confirmModal').style.display='flex'; document.getElementById('confirmAction').onclick=()=>{if(confirmCallback)confirmCallback();closeConfirmModal();}; }
     function closeConfirmModal() { document.getElementById('confirmModal').style.display='none'; confirmCallback=null; }
-
-    function showToast(msg, type='info') {
-        const c = document.getElementById('toastContainer'), t = document.createElement('div'); t.className = 'toast '+type;
-        const ic = type==='success'?'fa-check-circle':type==='error'?'fa-times-circle':type==='warning'?'fa-exclamation-triangle':'fa-info-circle';
-        t.innerHTML = `<i class="fas ${ic}"></i><span>${escHtml(msg)}</span>`; c.appendChild(t);
-        setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(-20px)'; t.style.transition='0.3s'; setTimeout(()=>c.removeChild(t),300); }, 4000);
-    }
+    function showToast(msg, type='info') { const c = document.getElementById('toastContainer'), t = document.createElement('div'); t.className = 'toast '+type; const ic = type==='success'?'fa-check-circle':type==='error'?'fa-times-circle':type==='warning'?'fa-exclamation-triangle':'fa-info-circle'; t.innerHTML = `<i class="fas ${ic}"></i><span>${escHtml(msg)}</span>`; c.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(-20px)'; t.style.transition='0.3s'; setTimeout(()=>{ if(c.contains(t)) c.removeChild(t); },300); }, 4000); }
 
     window.onload = init;
 </script>
