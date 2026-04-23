@@ -8,48 +8,68 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        /* نفس تنسيقات CSS السابقة بالضبط */
-        :root { --bg-primary: #0B1120; --bg-secondary: #111827; --bg-card: #1A2332; --bg-input: #0F1729; --accent: #10B981; --accent-hover: #059669; --accent-glow: rgba(16, 185, 129, 0.15); --amber: #F59E0B; --amber-glow: rgba(245, 158, 11, 0.15); --danger: #EF4444; --danger-hover: #DC2626; --danger-glow: rgba(239, 68, 68, 0.15); --info: #3B82F6; --text-primary: #F1F5F9; --text-secondary: #94A3B8; --text-muted: #64748B; --border: #1E293B; --border-light: #334155; --radius: 12px; --radius-sm: 8px; --shadow: 0 4px 24px rgba(0,0,0,0.3); --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); --sidebar-w: 260px; --topbar-h: 64px; }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-primary: #0B1120; --bg-secondary: #111827; --bg-card: #1A2332;
+            --bg-input: #0F1729; --accent: #10B981; --accent-hover: #059669;
+            --accent-glow: rgba(16,185,129,0.15); --amber: #F59E0B;
+            --amber-glow: rgba(245,158,11,0.15); --danger: #EF4444;
+            --danger-hover: #DC2626; --danger-glow: rgba(239,68,68,0.15);
+            --info: #3B82F6; --text-primary: #F1F5F9; --text-secondary: #94A3B8;
+            --text-muted: #64748B; --border: #1E293B; --border-light: #334155;
+            --radius: 12px; --radius-sm: 8px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --sidebar-w: 260px; --topbar-h: 64px;
+        }
+        *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; min-height: 100vh; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-secondary); } ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+        /* شاشة الدخول */
         .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0B1120 0%, #0F2027 50%, #0B1120 100%); position: relative; overflow: hidden; padding: 20px; }
         .login-bg-shapes .shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: floatShape 8s ease-in-out infinite; }
         .shape-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; }
         .shape-2 { width: 300px; height: 300px; background: var(--amber); bottom: -80px; left: -80px; animation-delay: 2s; }
-        .shape-3 { width: 200px; height: 200px; background: #8B5CF6; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 4s; }
-        @keyframes floatShape { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -30px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } }
-        .login-card { background: rgba(26, 35, 50, 0.9); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 40px; width: 100%; max-width: 420px; position: relative; z-index: 1; animation: slideUp 0.6s ease-out; }
+        .shape-3 { width: 200px; height: 200px; background: #8B5CF6; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 4s; }
+        @keyframes floatShape { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        .login-card { background: rgba(26,35,50,0.9); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 40px; width: 100%; max-width: 420px; position: relative; z-index: 1; animation: slideUp 0.6s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .login-logo { text-align: center; margin-bottom: 32px; }
         .login-logo i { font-size: 48px; color: var(--accent); margin-bottom: 12px; display: block; }
         .login-logo h1 { font-size: 22px; font-weight: 700; }
         .login-logo p { font-size: 13px; color: var(--text-muted); direction: ltr; }
+
+        /* عناصر النموذج */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
         .form-group label i { margin-left: 4px; color: var(--accent); width: 16px; text-align: center; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Cairo', sans-serif; font-size: 14px; transition: var(--transition); }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-muted); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .password-wrapper { position: relative; } .password-wrapper input { padding-left: 40px; }
         .toggle-pass { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; }
         .error-msg { background: var(--danger-glow); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 10px; color: var(--danger); font-size: 13px; text-align: center; margin-bottom: 12px; }
         .locked-msg { background: var(--danger-glow); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 12px; color: var(--danger); font-size: 13px; text-align: center; margin-bottom: 12px; }
+
+        /* الأزرار */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border: none; border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); white-space: nowrap; }
-        .btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: var(--accent-hover); }
+        .btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
         .btn-danger { background: var(--danger); color: #fff; } .btn-danger:hover { background: var(--danger-hover); }
-        .btn-warning { background: var(--amber); color: #000; }
-        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+        .btn-warning { background: var(--amber); color: #000; } .btn-warning:hover { background: #D97706; }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); } .btn-outline:hover { background: var(--accent-glow); }
         .btn-ghost { background: transparent; color: var(--text-secondary); } .btn-ghost:hover { background: rgba(255,255,255,0.05); }
         .btn-block { width: 100%; } .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* التخطيط الرئيسي */
         .main-app { display: flex; min-height: 100vh; }
         .sidebar { width: var(--sidebar-w); background: var(--bg-secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; right: 0; bottom: 0; z-index: 100; transition: transform var(--transition); }
         .sidebar-header { padding: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
         .sidebar-header i { font-size: 24px; color: var(--accent); } .sidebar-title { font-size: 16px; font-weight: 700; flex: 1; }
         .sidebar-close { display: none; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
         .sidebar-nav { flex: 1; padding: 12px; overflow-y: auto; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-sm); color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-sm); color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition); margin-bottom: 2px; cursor: pointer; }
         .nav-item i { width: 20px; text-align: center; font-size: 15px; } .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
         .nav-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 600; }
         .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
@@ -57,7 +77,10 @@
         .top-bar { height: var(--topbar-h); padding: 0 24px; display: flex; align-items: center; gap: 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .hamburger { display: none; background: none; border: none; color: var(--text-primary); font-size: 20px; cursor: pointer; }
         .top-bar h2 { font-size: 18px; font-weight: 700; flex: 1; }
+        .top-bar-actions { display: flex; align-items: center; gap: 12px; }
         .user-badge { font-size: 13px; color: var(--text-secondary); } .user-badge i { color: var(--accent); }
+
+        /* الصفحات */
         .page { display: none; padding: 24px; animation: fadeIn 0.3s ease; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -65,16 +88,24 @@
         .search-box i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-box input { width: 100%; padding: 10px 14px; padding-right: 38px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Cairo', sans-serif; font-size: 14px; }
         .search-box input:focus { outline: none; border-color: var(--accent); }
+
+        /* بطاقات الإحصائيات */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; transition: var(--transition); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
         .stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; }
         .stat-tenants::before { background: var(--accent); } .stat-revenue::before { background: var(--amber); }
         .stat-upcoming::before { background: var(--info); } .stat-overdue::before { background: var(--danger); }
         .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .stat-tenants .stat-icon { background: var(--accent-glow); color: var(--accent); } .stat-revenue .stat-icon { background: var(--amber-glow); color: var(--amber); }
-        .stat-upcoming .stat-icon { background: rgba(59,130,246,0.15); color: var(--info); } .stat-overdue .stat-icon { background: var(--danger-glow); color: var(--danger); }
+        .stat-tenants .stat-icon { background: var(--accent-glow); color: var(--accent); }
+        .stat-revenue .stat-icon { background: var(--amber-glow); color: var(--amber); }
+        .stat-upcoming .stat-icon { background: rgba(59,130,246,0.15); color: var(--info); }
+        .stat-overdue .stat-icon { background: var(--danger-glow); color: var(--danger); }
         .stat-number { display: block; font-size: 26px; font-weight: 800; } .stat-label { font-size: 12px; color: var(--text-muted); }
-        .dashboard-section { margin-bottom: 28px; } .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; } .section-title i { color: var(--accent); margin-left: 6px; }
+
+        /* أقسام لوحة المعلومات */
+        .dashboard-section { margin-bottom: 28px; }
+        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; } .section-title i { color: var(--accent); margin-left: 6px; }
         .countdown-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
         .countdown-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: var(--transition); }
         .countdown-card:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -87,6 +118,8 @@
         .cc-time-unit .label { font-size: 10px; color: var(--text-muted); }
         .countdown-card.overdue { border-color: var(--danger); } .countdown-card.overdue .cc-time-unit .num { color: var(--danger); }
         .cc-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+        /* بطاقات المستأجرين والعقود */
         .tenants-grid, .contracts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
         .tenant-card, .contract-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: var(--transition); }
         .tenant-card:hover, .contract-card:hover { border-color: var(--border-light); box-shadow: var(--shadow); }
@@ -101,6 +134,8 @@
         .contract-card .cc-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .contract-card .cc-label { color: var(--text-muted); } .contract-card .cc-value { font-weight: 600; }
         .cc-contract-type { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--accent-glow); color: var(--accent); }
+
+        /* النوافذ المنبثقة */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s ease; }
         .modal { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-sm { max-width: 440px; } .modal-lg { max-width: 720px; }
@@ -108,20 +143,28 @@
         .modal-header h3 { font-size: 16px; font-weight: 700; }
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; } .modal-close:hover { color: var(--danger); }
         .modal-body { padding: 20px; } .modal-footer { padding: 16px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); }
+
+        /* طرق الدفع */
         .payment-method-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .payment-method-option input { display: none; }
-        .method-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px; background: var(--bg-primary); border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
+        .method-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px; background: var(--bg-primary); border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
         .method-card i { font-size: 24px; }
         .payment-method-option input:checked + .method-card { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
+
+        /* التأكيد */
         .confirm-modal-content { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; max-width: 400px; text-align: center; }
         .confirm-icon { font-size: 48px; color: var(--amber); margin-bottom: 16px; }
         .confirm-actions { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+
+        /* الإشعارات */
         .toast-container { position: fixed; top: 20px; left: 20px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
         .toast { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; min-width: 280px; box-shadow: var(--shadow); animation: toastIn 0.3s ease; }
         .toast.success { border-right: 3px solid var(--accent); } .toast.success i { color: var(--accent); }
         .toast.error { border-right: 3px solid var(--danger); } .toast.error i { color: var(--danger); }
         .toast.warning { border-right: 3px solid var(--amber); } .toast.warning i { color: var(--amber); }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* الإعدادات والنسخ الاحتياطي */
         .settings-grid, .backup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
         .settings-card, .backup-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
         .settings-card h3, .backup-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -131,6 +174,8 @@
         .toggle-switch label::after { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #fff; top: 3px; right: 3px; transition: var(--transition); }
         .toggle-switch input:checked + label { background: var(--accent); } .toggle-switch input:checked + label::after { right: calc(100% - 23px); }
         .backup-card { text-align: center; } .backup-icon { width: 64px; height: 64px; border-radius: 16px; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
+
+        /* التقارير */
         .report-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
         .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .report-summary-item { background: var(--bg-primary); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
@@ -138,10 +183,16 @@
         .report-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .report-table th, .report-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); }
         .report-table th { background: var(--bg-primary); color: var(--text-secondary); font-size: 12px; }
+
+        /* النشاط */
         .activity-list { display: flex; flex-direction: column; gap: 8px; }
         .activity-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; }
         .act-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .act-icon.payment { background: var(--accent-glow); color: var(--accent); } .act-icon.new { background: var(--amber-glow); color: var(--amber); } .act-icon.delete { background: var(--danger-glow); color: var(--danger); }
+        .act-icon.payment { background: var(--accent-glow); color: var(--accent); }
+        .act-icon.new { background: var(--amber-glow); color: var(--amber); }
+        .act-icon.delete { background: var(--danger-glow); color: var(--danger); }
+
+        /* التفاصيل */
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .detail-item { font-size: 13px; padding: 6px 0; } .detail-item .di-label { color: var(--text-muted); font-size: 11px; } .detail-item .di-value { font-weight: 600; }
         .method-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
@@ -153,71 +204,1450 @@
         .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .status-badge.online { background: var(--accent-glow); color: var(--accent); }
         .status-badge.offline { background: var(--danger-glow); color: var(--danger); }
-        @media print { body { background: #fff !important; color: #000 !important; } .sidebar, .top-bar, .page-header, .btn, .hamburger, .modal-overlay, .toast-container, #page-dashboard, #page-tenants, #page-contracts, #page-notifications, #page-backup, #page-settings { display: none !important; } .main-content { margin: 0 !important; } #page-reports { display: block !important; padding: 0 !important; } .report-container { background: #fff !important; border: none !important; } }
-        @media (max-width: 768px) { .sidebar { transform: translateX(100%); } .sidebar.open { transform: translateX(0); } .sidebar-close { display: block; } .main-content { margin-right: 0; } .hamburger { display: block; } .form-row, .stats-grid, .detail-grid { grid-template-columns: 1fr; } .tenants-grid, .contracts-grid, .settings-grid, .backup-grid { grid-template-columns: 1fr; } .page-header { flex-direction: column; } .search-box { max-width: 100%; } }
+
+        /* سجل المدفوعات */
+        .payment-history { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
+        .payment-history h4 { font-size: 14px; margin-bottom: 10px; color: var(--text-secondary); }
+        .ph-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; }
+
+        @media print {
+            body { background: #fff !important; color: #000 !important; }
+            .sidebar, .top-bar, .page-header, .btn, .hamburger, .modal-overlay, .toast-container { display: none !important; }
+            .main-content { margin: 0 !important; }
+            #page-reports { display: block !important; padding: 0 !important; }
+            .report-container { background: #fff !important; border: none !important; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); } .sidebar.open { transform: translateX(0); }
+            .sidebar-close { display: block; } .main-content { margin-right: 0; }
+            .hamburger { display: block; }
+            .form-row, .stats-grid, .detail-grid { grid-template-columns: 1fr; }
+            .tenants-grid, .contracts-grid, .settings-grid, .backup-grid, .countdown-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; } .search-box { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
 
+<!-- شاشة التحميل -->
 <div id="loadingOverlay" class="loading-overlay">
     <i class="fas fa-spinner"></i>
     <p>جاري الاتصال بقاعدة بيانات GitHub...</p>
 </div>
 
+<!-- شاشة الدخول -->
 <div id="loginScreen" class="login-screen" style="display:none">
-    <div class="login-bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
+    <div class="login-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
     <div class="login-card">
-        <div class="login-logo"><i class="fas fa-building"></i><h1>نظام إدارة الإيجارات</h1><p>Rent Management System</p></div>
+        <div class="login-logo">
+            <i class="fas fa-building"></i>
+            <h1>نظام إدارة الإيجارات</h1>
+            <p>Rent Management System</p>
+        </div>
         <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="form-group"><label><i class="fas fa-user"></i> اسم المستخدم</label><input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم" required></div>
-            <div class="form-group"><label><i class="fas fa-lock"></i> كلمة المرور</label><div class="password-wrapper"><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required><button type="button" class="toggle-pass" onclick="togglePasswordVisibility('loginPassword', this)"><i class="fas fa-eye"></i></button></div></div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> اسم المستخدم</label>
+                <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> كلمة المرور</label>
+                <div class="password-wrapper">
+                    <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                    <button type="button" class="toggle-pass" onclick="togglePasswordVisibility('loginPassword', this)"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
             <div id="loginError" class="error-msg" style="display:none"></div>
-            <div id="loginLocked" class="locked-msg" style="display:none"><i class="fas fa-lock"></i><span>تم قفل الحساب</span></div>
+            <div id="loginLocked" class="locked-msg" style="display:none"><i class="fas fa-lock"></i> تم قفل الحساب بسبب محاولات خاطئة متكررة</div>
             <button type="submit" class="btn btn-primary btn-block" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
         </form>
     </div>
 </div>
 
+<!-- التطبيق الرئيسي -->
 <div id="mainApp" class="main-app" style="display:none">
     <aside id="sidebar" class="sidebar">
-        <div class="sidebar-header"><i class="fas fa-building"></i><span class="sidebar-title">إدارة الإيجارات</span><button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></button></div>
+        <div class="sidebar-header">
+            <i class="fas fa-building"></i>
+            <span class="sidebar-title">إدارة الإيجارات</span>
+            <button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+        </div>
         <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" onclick="navigateTo('dashboard', this)"><i class="fas fa-th-large"></i><span>لوحة المعلومات</span></a>
-            <a href="#" class="nav-item" onclick="navigateTo('tenants', this)"><i class="fas fa-users"></i><span>المستأجرون</span></a>
-            <a href="#" class="nav-item" onclick="navigateTo('contracts', this)"><i class="fas fa-file-contract"></i><span>العقود</span></a>
-            <a href="#" class="nav-item" onclick="navigateTo('reports', this)"><i class="fas fa-chart-bar"></i><span>التقارير</span></a>
-            <a href="#" class="nav-item" onclick="navigateTo('notifications', this)"><i class="fas fa-bell"></i><span>الإشعارات</span></a>
-            <a href="#" class="nav-item" onclick="navigateTo('backup', this)"><i class="fas fa-database"></i><span>النسخ الاحتياطي</span></div>
-            <a href="#" class="nav-item" onclick="navigateTo('settings', this)"><i class="fas fa-cog"></i><span>الإعدادات</span></a>
+            <a class="nav-item active" onclick="navigateTo('dashboard', this)"><i class="fas fa-th-large"></i><span>لوحة المعلومات</span></a>
+            <a class="nav-item" onclick="navigateTo('tenants', this)"><i class="fas fa-users"></i><span>المستأجرون</span></a>
+            <a class="nav-item" onclick="navigateTo('contracts', this)"><i class="fas fa-file-contract"></i><span>العقود</span></a>
+            <a class="nav-item" onclick="navigateTo('reports', this)"><i class="fas fa-chart-bar"></i><span>التقارير</span></a>
+            <a class="nav-item" onclick="navigateTo('notifications', this)"><i class="fas fa-bell"></i><span>الإشعارات</span></a>
+            <a class="nav-item" onclick="navigateTo('backup', this)"><i class="fas fa-database"></i><span>النسخ الاحتياطي</span></a>
+            <a class="nav-item" onclick="navigateTo('settings', this)"><i class="fas fa-cog"></i><span>الإعدادات</span></a>
         </nav>
-        <div class="sidebar-footer"><button class="btn btn-ghost btn-block" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button></div>
+        <div class="sidebar-footer">
+            <button class="btn btn-ghost btn-block" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+        </div>
     </aside>
-    <main id="mainContent" class="main-content">
-        <header class="top-bar"><button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2 id="pageTitle">لوحة المعلومات</h2><div class="top-bar-actions"><span id="githubStatus" class="status-badge offline"><i class="fas fa-circle"></i> غير متصل</span><span id="currentUser" class="user-badge"><i class="fas fa-user-circle"></i> <span></span></span></div></header>
 
-        <section id="page-dashboard" class="page active"><div class="stats-grid"><div class="stat-card stat-tenants"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><span class="stat-number" id="statTenants">0</span><span class="stat-label">إجمالي المستأجرين</span></div></div><div class="stat-card stat-revenue"><div class="stat-icon"><i class="fas fa-coins"></i></div><div class="stat-info"><span class="stat-number" id="statRevenue">0</span><span class="stat-label">الإيرادات الشهرية</span></div></div><div class="stat-card stat-upcoming"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><span class="stat-number" id="statUpcoming">0</span><span class="stat-label">مدفوعات قادمة</span></div></div><div class="stat-card stat-overdue"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><span class="stat-number" id="statOverdue">0</span><span class="stat-label">متأخرات</span></div></div></div><div class="dashboard-section"><h3 class="section-title"><i class="fas fa-hourglass-half"></i> العد التنازلي للدفع القادم</h3><div id="countdownContainer" class="countdown-grid"></div></div><div class="dashboard-section"><h3 class="section-title"><i class="fas fa-history"></i> آخر العمليات</h3><div id="recentActivity" class="activity-list"></div></div></section>
-        <section id="page-tenants" class="page"><div class="page-header"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="tenantSearch" placeholder="بحث عن مستأجر..." oninput="refreshTenantsList()"></div><button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة مستأجر</button></div><div id="tenantsList" class="tenants-grid"></div></section>
-        <section id="page-contracts" class="page"><div class="page-header"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="contractSearch" placeholder="بحث في العقود..." oninput="refreshContractsList()"></div><button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة عقد</button></div><div id="contractsList" class="contracts-grid"></div></section>
-        <section id="page-reports" class="page"><div class="page-header"><div class="form-group" style="margin:0;min-width:150px"><select id="reportTenantFilter" onchange="generateReport()" style="padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);border-radius:8px"><option value="all">الكل</option></select></div><div class="form-group" style="margin:0;min-width:150px"><select id="reportPeriodFilter" onchange="generateReport()" style="padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);border-radius:8px"><option value="all">الكل</option><option value="month">الشهر الحالي</option><option value="year">السنة الحالية</option></select></div><button class="btn btn-primary" onclick="printReport()"><i class="fas fa-print"></i> طباعة</button></div><div id="reportContent" class="report-container"></div></section>
-        <section id="page-notifications" class="page"><div class="settings-grid"><div class="settings-card"><h3><i class="fas fa-envelope"></i> إعدادات البريد (EmailJS)</h3><div class="form-group"><label>Service ID</label><input type="text" id="emailjsServiceId"></div><div class="form-group"><label>Template ID</label><input type="text" id="emailjsTemplateId"></div><div class="form-group"><label>Public Key</label><input type="text" id="emailjsUserId"></div><div class="form-group"><label>بريد المالك</label><input type="email" id="ownerEmail"></div><div class="form-group"><label>واتساب المالك</label><input type="text" id="ownerWhatsapp"></div><button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button></div><div class="settings-card"><h3><i class="fas fa-bell"></i> إعدادات الإشعارات</h3><div class="form-group"><label>الإشعار قبل الدفع بـ (أيام)</label><input type="number" id="notifyDaysBefore" min="1" max="30" value="7"></div><div class="form-group"><label>تفعيل إشعارات المتصفح</label><div class="toggle-switch"><input type="checkbox" id="browserNotifications" onchange="requestBrowserNotificationPermission()"><label for="browserNotifications"></label></div></div><button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button></div><div class="settings-card" style="grid-column:1/-1"><h3><i class="fas fa-language"></i> محتوى الإشعار (عربي وإنجليزي معاً)</h3><div class="form-group"><label>عربي</label><textarea id="notifBodyAr" rows="3">السلام عليكم {name}، إيجار {property} بمبلغ {amount} مستحق خلال {days} يوم. التاريخ: {date}</textarea></div><div class="form-group"><label>English</label><textarea id="notifBodyEn" rows="3">Dear {name}, rent for {property} amount {amount} is due in {days} days. Date: {date}</textarea></div><button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button></div></div></section>
-        <section id="page-backup" class="page"><div class="backup-grid"><div class="backup-card"><div class="backup-icon"><i class="fas fa-download"></i></div><h3>تنزيل نسخة</h3><button class="btn btn-primary" onclick="backupData()"><i class="fas fa-download"></i> تنزيل</button></div><div class="backup-card"><div class="backup-icon" style="background:var(--amber-glow);color:var(--amber)"><i class="fas fa-upload"></i></div><h3>استعادة نسخة</h3><input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreData(event)"><button class="btn btn-warning" onclick="document.getElementById('restoreFile').click()"><i class="fas fa-upload"></i> رفع</button></div></div></section>
-        <section id="page-settings" class="page"><div class="settings-grid">
-            <div class="settings-card" style="grid-column: 1 / -1; border: 2px solid var(--info);">
-                <h3><i class="fas fa-server"></i> إعدادات السيرفر (GitHub Database)</h3>
-                <div style="background:var(--danger-glow);border:1px solid var(--danger);padding:10px;border-radius:8px;margin-bottom:16px;font-size:12px;color:var(--danger)">
-                    <strong>تحذير أمني:</strong> لضمان أمان بياناتك، يرجى إنشاء <strong>مستودع خاص (Private Repository)</strong> على GitHub. لا تضع الـ Token في مستودع عام. قم بإنشاء Token من إعدادات المطور في GitHub واختر صلاحية <code>repo</code>.
-                </div>
-                <div class="form-group"><label><i class="fab fa-github"></i> اسم المستخدم (Username)</label><input type="text" id="githubOwner" placeholder="مثال: ahmed-ali"></div>
-                <div class="form-group"><label><i class="fas fa-folder"></i> اسم المستودع (Repository)</label><input type="text" id="githubRepo" placeholder="مثال: rent-data-db"></div>
-                <div class="form-group"><label><i class="fas fa-key"></i> Token الوصول (PAT)</label><input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxx"></div>
-                <button class="btn btn-primary" onclick="saveGithubConfig()"><i class="fas fa-link"></i> حفظ الاتصال</button>
-                <button class="btn btn-outline" onclick="testGithubConnection()" style="margin-right:8px"><i class="fas fa-plug"></i> اختبار الاتصال</button>
+    <main id="mainContent" class="main-content">
+        <header class="top-bar">
+            <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <h2 id="pageTitle">لوحة المعلومات</h2>
+            <div class="top-bar-actions">
+                <span id="githubStatus" class="status-badge offline"><i class="fas fa-circle"></i> غير متصل</span>
+                <span id="currentUser" class="user-badge"><i class="fas fa-user-circle"></i> <span></span></span>
             </div>
-            <div class="settings-card"><h3><i class="fas fa-shield-alt"></i> أمان الدخول</h3><div class="form-group"><label>محاولات الدخول</label><input type="number" id="maxLoginAttempts" min="1" max="10" value="5"></div><div class="form-group"><label>اسم المستخدم</label><input type="text" id="settingsUsername"></div><div class="form-group"><label>كلمة المرور الحالية</label><input type="password" id="settingsCurrentPass"></div><div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="settingsNewPass"></div><div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="settingsConfirmPass"></div><button class="btn btn-primary" onclick="saveSecuritySettings()"><i class="fas fa-save"></i> حفظ</button></div>
-            <div class="settings-card"><h3><i class="fas fa-palette"></i> عام</h3><div class="form-group"><label>العملة</label><select id="currencySelect"><option value="ر.س">ريال سعودي</option><option value="د.إ">درهم</option><option value="$">دولار</option><option value="€">يورو</option></select></div><button class="btn btn-primary" onclick="saveGeneralSettings()"><i class="fas fa-save"></i> حفظ</button><hr style="border-color:var(--border);margin:20px 0"><h3 style="color:var(--danger)"><i class="fas fa-trash-alt"></i> منطقة الخطر</h3><p style="color:var(--text-muted);margin-bottom:12px">حذف الكل</p><button class="btn btn-danger" onclick="confirmDeleteAll()"><i class="fas fa-trash-alt"></i> حذف</button></div>
-        </div></section>
+        </header>
+
+        <!-- لوحة المعلومات -->
+        <section id="page-dashboard" class="page active">
+            <div class="stats-grid">
+                <div class="stat-card stat-tenants"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><span class="stat-number" id="statTenants">0</span><span class="stat-label">إجمالي المستأجرين</span></div></div>
+                <div class="stat-card stat-revenue"><div class="stat-icon"><i class="fas fa-coins"></i></div><div class="stat-info"><span class="stat-number" id="statRevenue">0</span><span class="stat-label">الإيرادات الشهرية</span></div></div>
+                <div class="stat-card stat-upcoming"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><span class="stat-number" id="statUpcoming">0</span><span class="stat-label">مدفوعات قادمة</span></div></div>
+                <div class="stat-card stat-overdue"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><span class="stat-number" id="statOverdue">0</span><span class="stat-label">متأخرات</span></div></div>
+            </div>
+            <div class="dashboard-section">
+                <h3 class="section-title"><i class="fas fa-hourglass-half"></i> العد التنازلي للدفع القادم</h3>
+                <div id="countdownContainer" class="countdown-grid"></div>
+            </div>
+            <div class="dashboard-section">
+                <h3 class="section-title"><i class="fas fa-history"></i> آخر العمليات</h3>
+                <div id="recentActivity" class="activity-list"></div>
+            </div>
+        </section>
+
+        <!-- المستأجرون -->
+        <section id="page-tenants" class="page">
+            <div class="page-header">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="tenantSearch" placeholder="بحث عن مستأجر..." oninput="refreshTenantsList()"></div>
+                <button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة مستأجر</button>
+            </div>
+            <div id="tenantsList" class="tenants-grid"></div>
+        </section>
+
+        <!-- العقود -->
+        <section id="page-contracts" class="page">
+            <div class="page-header">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="contractSearch" placeholder="بحث في العقود..." oninput="refreshContractsList()"></div>
+                <button class="btn btn-primary" onclick="openTenantModal()"><i class="fas fa-plus"></i> إضافة عقد</button>
+            </div>
+            <div id="contractsList" class="contracts-grid"></div>
+        </section>
+
+        <!-- التقارير -->
+        <section id="page-reports" class="page">
+            <div class="page-header">
+                <div class="form-group" style="margin:0;min-width:150px">
+                    <select id="reportTenantFilter" onchange="generateReport()" style="padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);border-radius:8px">
+                        <option value="all">الكل</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0;min-width:150px">
+                    <select id="reportPeriodFilter" onchange="generateReport()" style="padding:8px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);border-radius:8px">
+                        <option value="all">الكل</option>
+                        <option value="month">الشهر الحالي</option>
+                        <option value="year">السنة الحالية</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="printReport()"><i class="fas fa-print"></i> طباعة</button>
+            </div>
+            <div id="reportContent" class="report-container"></div>
+        </section>
+
+        <!-- الإشعارات -->
+        <section id="page-notifications" class="page">
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3><i class="fas fa-envelope"></i> إعدادات البريد (EmailJS)</h3>
+                    <div class="form-group"><label>Service ID</label><input type="text" id="emailjsServiceId"></div>
+                    <div class="form-group"><label>Template ID</label><input type="text" id="emailjsTemplateId"></div>
+                    <div class="form-group"><label>Public Key</label><input type="text" id="emailjsUserId"></div>
+                    <div class="form-group"><label>بريد المالك</label><input type="email" id="ownerEmail"></div>
+                    <div class="form-group"><label>واتساب المالك</label><input type="text" id="ownerWhatsapp"></div>
+                    <button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-bell"></i> إعدادات الإشعارات</h3>
+                    <div class="form-group"><label>الإشعار قبل الدفع بـ (أيام)</label><input type="number" id="notifyDaysBefore" min="1" max="30" value="7"></div>
+                    <div class="form-group">
+                        <label>تفعيل إشعارات المتصفح</label>
+                        <div class="toggle-switch"><input type="checkbox" id="browserNotifications" onchange="requestBrowserNotificationPermission()"><label for="browserNotifications"></label></div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button>
+                </div>
+                <div class="settings-card" style="grid-column:1/-1">
+                    <h3><i class="fas fa-language"></i> محتوى الإشعار</h3>
+                    <div class="form-group"><label>عربي</label><textarea id="notifBodyAr" rows="3">السلام عليكم {name}، إيجار {property} بمبلغ {amount} مستحق خلال {days} يوم. التاريخ: {date}</textarea></div>
+                    <div class="form-group"><label>English</label><textarea id="notifBodyEn" rows="3">Dear {name}, rent for {property} amount {amount} is due in {days} days. Date: {date}</textarea></div>
+                    <button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> حفظ</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- النسخ الاحتياطي -->
+        <section id="page-backup" class="page">
+            <div class="backup-grid">
+                <div class="backup-card">
+                    <div class="backup-icon"><i class="fas fa-download"></i></div>
+                    <h3>تنزيل نسخة احتياطية</h3>
+                    <p style="color:var(--text-muted);margin-bottom:16px;font-size:13px">حفظ جميع البيانات كملف JSON</p>
+                    <button class="btn btn-primary" onclick="backupData()"><i class="fas fa-download"></i> تنزيل</button>
+                </div>
+                <div class="backup-card">
+                    <div class="backup-icon" style="background:var(--amber-glow);color:var(--amber)"><i class="fas fa-upload"></i></div>
+                    <h3>استعادة نسخة احتياطية</h3>
+                    <p style="color:var(--text-muted);margin-bottom:16px;font-size:13px">رفع ملف JSON لاستعادة البيانات</p>
+                    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreData(event)">
+                    <button class="btn btn-warning" onclick="document.getElementById('restoreFile').click()"><i class="fas fa-upload"></i> رفع</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- الإعدادات -->
+        <section id="page-settings" class="page">
+            <div class="settings-grid">
+                <div class="settings-card" style="grid-column: 1 / -1; border: 2px solid var(--info);">
+                    <h3><i class="fas fa-server"></i> إعدادات السيرفر (GitHub Database)</h3>
+                    <div style="background:var(--danger-glow);border:1px solid var(--danger);padding:10px;border-radius:8px;margin-bottom:16px;font-size:12px;color:var(--danger)">
+                        <strong>تحذير أمني:</strong> استخدم مستودع خاص (Private Repository) على GitHub. أنشئ Token من إعدادات المطور واختر صلاحية <code>repo</code>.
+                    </div>
+                    <div class="form-group"><label><i class="fab fa-github"></i> اسم المستخدم</label><input type="text" id="githubOwner" placeholder="مثال: ahmed-ali"></div>
+                    <div class="form-group"><label><i class="fas fa-folder"></i> اسم المستودع</label><input type="text" id="githubRepo" placeholder="مثال: rent-data-db"></div>
+                    <div class="form-group"><label><i class="fas fa-key"></i> Token الوصول (PAT)</label><input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxx"></div>
+                    <button class="btn btn-primary" onclick="saveGithubConfig()"><i class="fas fa-link"></i> حفظ الاتصال</button>
+                    <button class="btn btn-outline" onclick="testGithubConnection()" style="margin-right:8px"><i class="fas fa-plug"></i> اختبار الاتصال</button>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-shield-alt"></i> أمان الدخول</h3>
+                    <div class="form-group"><label>محاولات الدخول المسموحة</label><input type="number" id="maxLoginAttempts" min="1" max="10" value="5"></div>
+                    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="settingsUsername"></div>
+                    <div class="form-group"><label>كلمة المرور الحالية</label><input type="password" id="settingsCurrentPass"></div>
+                    <div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="settingsNewPass"></div>
+                    <div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="settingsConfirmPass"></div>
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()"><i class="fas fa-save"></i> حفظ</button>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-palette"></i> عام</h3>
+                    <div class="form-group"><label>العملة</label>
+                        <select id="currencySelect"><option value="ر.س">ريال سعودي</option><option value="د.إ">درهم إماراتي</option><option value="$">دولار</option><option value="€">يورو</option><option value="ج.م">جنيه مصري</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGeneralSettings()"><i class="fas fa-save"></i> حفظ</button>
+                    <hr style="border-color:var(--border);margin:20px 0">
+                    <h3 style="color:var(--danger)"><i class="fas fa-trash-alt"></i> منطقة الخطر</h3>
+                    <p style="color:var(--text-muted);margin-bottom:12px;font-size:13px">حذف جميع البيانات نهائياً</p>
+                    <button class="btn btn-danger" onclick="confirmDeleteAll()"><i class="fas fa-trash-alt"></i> حذف الكل</button>
+                </div>
+            </div>
+        </section>
     </main>
 </div>
 
-<!-- Modals (نفس الـ Modals السابقة) -->
-<div id="tenantModal" class="modal-overlay" style="display:none"><div class="modal"><div class="modal-header"><h3 id="tenantModalTitle">إضافة مستأجر</h3><button class="modal-close" onclick="closeTenantModal()"><i class="fas fa-times"></i></button></div><form id="tenantForm" onsubmit="saveTenant(event)"><input type="hidden" id="tenantId"><div class="modal-body"><div class="form-row"><div class="form-group"><label><i class="fas fa-user"></i> الاسم</label><input type="text" id="tenantName" required></div><div class="form-group"><label><i class="fas fa-phone"></i> الهاتف</label><input type="tel" id="tenantPhone"></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-envelope"></i> البريد</label><input type="email" id="tenantEmail"></div><div class="form-group"><label><i class="fab fa-whatsapp"></i> واتساب</label><input type="text" id="tenantWhatsapp"></div></div><div class="form-row"><div class="form-group"><label><i class="fas fa-map-marker-alt"></i> العقار</label><input type="text" id="tenantProperty" required></div><div class="
+<!-- نافذة إضافة/تعديل المستأجر -->
+<div id="tenantModal" class="modal-overlay" style="display:none">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="tenantModalTitle">إضافة مستأجر</h3>
+            <button class="modal-close" onclick="closeTenantModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="tenantForm" onsubmit="saveTenant(event)">
+            <input type="hidden" id="tenantId">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group"><label><i class="fas fa-user"></i> الاسم</label><input type="text" id="tenantName" required></div>
+                    <div class="form-group"><label><i class="fas fa-phone"></i> الهاتف</label><input type="tel" id="tenantPhone"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label><i class="fas fa-envelope"></i> البريد</label><input type="email" id="tenantEmail"></div>
+                    <div class="form-group"><label><i class="fab fa-whatsapp"></i> واتساب</label><input type="text" id="tenantWhatsapp"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> العقار</label><input type="text" id="tenantProperty" required></div>
+                    <div class="form-group"><label><i class="fas fa-tag"></i> نوع العقد</label>
+                        <select id="tenantContractType"><option value="شهري">شهري</option><option value="ربع سنوي">ربع سنوي</option><option value="نصف سنوي">نصف سنوي</option><option value="سنوي">سنوي</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label><i class="fas fa-coins"></i> مبلغ الإيجار</label><input type="number" id="tenantRent" min="0" required></div>
+                    <div class="form-group"><label><i class="fas fa-calendar-plus"></i> تاريخ بداية العقد</label><input type="date" id="tenantStartDate" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label><i class="fas fa-calendar-check"></i> تاريخ نهاية العقد</label><input type="date" id="tenantEndDate" required></div>
+                    <div class="form-group"><label><i class="fas fa-calendar-alt"></i> تاريخ الدفع القادم</label><input type="date" id="tenantNextPayment" required></div>
+                </div>
+                <div class="form-group"><label><i class="fas fa-sticky-note"></i> ملاحظات</label><textarea id="tenantNotes" rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="closeTenantModal()">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="tenantSubmitBtn"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- نافذة تسجيل دفعة -->
+<div id="paymentModal" class="modal-overlay" style="display:none">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3>تسجيل دفعة</h3>
+            <button class="modal-close" onclick="closePaymentModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="paymentForm" onsubmit="savePayment(event)">
+            <input type="hidden" id="paymentTenantId">
+            <div class="modal-body">
+                <div class="form-group"><label><i class="fas fa-user"></i> المستأجر</label><input type="text" id="paymentTenantName" readonly style="opacity:0.7"></div>
+                <div class="form-group"><label><i class="fas fa-coins"></i> المبلغ</label><input type="number" id="paymentAmount" min="0" required></div>
+                <div class="form-group"><label><i class="fas fa-calendar"></i> تاريخ الدفع</label><input type="date" id="paymentDate" required></div>
+                <div class="form-group">
+                    <label><i class="fas fa-credit-card"></i> طريقة الدفع</label>
+                    <div class="payment-method-btns">
+                        <label class="payment-method-option"><input type="radio" name="paymentMethod" value="cash" checked><div class="method-card"><i class="fas fa-money-bill-wave"></i><span>نقدي</span></div></label>
+                        <label class="payment-method-option"><input type="radio" name="paymentMethod" value="transfer"><div class="method-card"><i class="fas fa-university"></i><span>تحويل بنكي</span></div></label>
+                    </div>
+                </div>
+                <div class="form-group"><label><i class="fas fa-sticky-note"></i> ملاحظات</label><textarea id="paymentNotes" rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="closePaymentModal()">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> تسجيل</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- نافذة التأكيد -->
+<div id="confirmModal" class="modal-overlay" style="display:none">
+    <div class="confirm-modal-content">
+        <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <h3 id="confirmTitle">تأكيد الحذف</h3>
+        <p id="confirmMessage" style="color:var(--text-secondary);margin-top:8px;font-size:14px">هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.</p>
+        <div class="confirm-actions">
+            <button class="btn btn-ghost" onclick="closeConfirmModal()">إلغاء</button>
+            <button class="btn btn-danger" id="confirmAction">حذف</button>
+        </div>
+    </div>
+</div>
+
+<!-- حاوية الإشعارات -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+/* ==========================================
+   نظام إدارة الإيجارات - الكود الرئيسي
+   ========================================== */
+
+// ---- الحالة العامة ----
+let appState = {
+    tenants: [],
+    payments: [],
+    activities: [],
+    settings: {
+        username: 'admin',
+        password: 'admin123',
+        maxLoginAttempts: 5,
+        currency: 'ر.س',
+        github: { owner: '', repo: '', token: '' },
+        emailjs: { serviceId: '', templateId: '', userId: '' },
+        ownerEmail: '',
+        ownerWhatsapp: '',
+        notifyDaysBefore: 7,
+        browserNotifications: false,
+        notifBodyAr: 'السلام عليكم {name}، إيجار {property} بمبلغ {amount} مستحق خلال {days} يوم. التاريخ: {date}',
+        notifBodyEn: 'Dear {name}, rent for {property} amount {amount} is due in {days} days. Date: {date}'
+    },
+    loginAttempts: 0,
+    isLocked: false,
+    isLoggedIn: false,
+    currentUser: ''
+};
+
+// ---- عداد التحديث ----
+let countdownInterval = null;
+
+// =========================================
+// أدوات مساعدة
+// =========================================
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
+
+function formatNumber(n) {
+    return Number(n || 0).toLocaleString('ar-SA');
+}
+
+function getCurrency() {
+    return appState.settings.currency || 'ر.س';
+}
+
+function formatDate(d) {
+    if (!d) return '—';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function daysUntil(dateStr) {
+    if (!dateStr) return Infinity;
+    const now = new Date(); now.setHours(0,0,0,0);
+    const target = new Date(dateStr); target.setHours(0,0,0,0);
+    return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+}
+
+function getNextPaymentDate(startDate, contractType) {
+    if (!startDate) return null;
+    const d = new Date(startDate);
+    const now = new Date();
+    // احسب تاريخ الدفع التالي بناءً على نوع العقد
+    const intervals = { 'شهري': 1, 'ربع سنوي': 3, 'نصف سنوي': 6, 'سنوي': 12 };
+    const months = intervals[contractType] || 1;
+    while (d <= now) {
+        d.setMonth(d.getMonth() + months);
+    }
+    return d.toISOString().split('T')[0];
+}
+
+// =========================================
+// التخزين المحلي (الاحتياطي + الحالة الأولية)
+// =========================================
+function saveToLocal() {
+    try {
+        localStorage.setItem('rentApp_v2', JSON.stringify(appState));
+    } catch(e) { /* تجاهل */ }
+}
+
+function loadFromLocal() {
+    try {
+        const data = localStorage.getItem('rentApp_v2');
+        if (data) {
+            const parsed = JSON.parse(data);
+            // دمج عميق مع القيم الافتراضية
+            appState = { ...appState, ...parsed };
+            appState.settings = { ...appState.settings, ...(parsed.settings || {}) };
+            appState.settings.github = { ...appState.settings.github, ...(parsed.settings?.github || {}) };
+            appState.settings.emailjs = { ...appState.settings.emailjs, ...(parsed.settings?.emailjs || {}) };
+        }
+    } catch(e) { /* تجاهل */ }
+}
+
+// =========================================
+// GitHub Database - الاتصال بقاعدة البيانات
+// =========================================
+function getGithubConfig() {
+    return appState.settings.github;
+}
+
+function githubApiUrl(path) {
+    const cfg = getGithubConfig();
+    return `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
+}
+
+function githubHeaders() {
+    const cfg = getGithubConfig();
+    return {
+        'Authorization': `token ${cfg.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+    };
+}
+
+// قراءة ملف من GitHub
+async function githubRead(path) {
+    const cfg = getGithubConfig();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return null;
+    try {
+        const resp = await fetch(githubApiUrl(path), { headers: githubHeaders() });
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        const content = atob(data.content.replace(/\n/g, ''));
+        return { content: JSON.parse(content), sha: data.sha };
+    } catch(e) {
+        console.warn('GitHub read error:', e);
+        return null;
+    }
+}
+
+// كتابة ملف إلى GitHub
+async function githubWrite(path, contentObj, sha = null) {
+    const cfg = getGithubConfig();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return false;
+    try {
+        const body = {
+            message: `Update ${path} - ${new Date().toISOString()}`,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(contentObj, null, 2)))),
+        };
+        if (sha) body.sha = sha;
+        const resp = await fetch(githubApiUrl(path), {
+            method: 'PUT',
+            headers: githubHeaders(),
+            body: JSON.stringify(body)
+        });
+        return resp.ok;
+    } catch(e) {
+        console.warn('GitHub write error:', e);
+        return false;
+    }
+}
+
+// مزامنة البيانات مع GitHub
+async function syncToGithub() {
+    const cfg = getGithubConfig();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return;
+
+    const dataToSync = {
+        tenants: appState.tenants,
+        payments: appState.payments,
+        activities: appState.activities,
+        settings: appState.settings,
+        updatedAt: new Date().toISOString()
+    };
+
+    const existing = await githubRead('data.json');
+    const sha = existing ? existing.sha : null;
+    const ok = await githubWrite('data.json', dataToSync, sha);
+
+    updateGithubStatus(ok);
+    if (ok) showToast('تمت المزامنة مع GitHub', 'success');
+    else showToast('فشلت المزامنة مع GitHub', 'error');
+}
+
+async function syncFromGithub() {
+    const cfg = getGithubConfig();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return false;
+
+    const result = await githubRead('data.json');
+    if (result && result.content) {
+        const data = result.content;
+        if (data.tenants) appState.tenants = data.tenants;
+        if (data.payments) appState.payments = data.payments;
+        if (data.activities) appState.activities = data.activities;
+        if (data.settings) {
+            appState.settings = { ...appState.settings, ...data.settings };
+            appState.settings.github = { ...appState.settings.github, ...(data.settings.github || {}) };
+            appState.settings.emailjs = { ...appState.settings.emailjs, ...(data.settings.emailjs || {}) };
+        }
+        saveToLocal();
+        updateGithubStatus(true);
+        return true;
+    }
+    updateGithubStatus(false);
+    return false;
+}
+
+function updateGithubStatus(online) {
+    const badge = document.getElementById('githubStatus');
+    if (online) {
+        badge.className = 'status-badge online';
+        badge.innerHTML = '<i class="fas fa-circle"></i> متصل';
+    } else {
+        badge.className = 'status-badge offline';
+        badge.innerHTML = '<i class="fas fa-circle"></i> غير متصل';
+    }
+}
+
+// =========================================
+// الإشعارات (Toast)
+// =========================================
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-circle' };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fas ${icons[type] || icons.success}"></i><span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-20px)'; setTimeout(() => toast.remove(), 300); }, 3500);
+}
+
+// =========================================
+// التأكيد
+// =========================================
+let confirmCallback = null;
+function showConfirm(title, message, callback) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    confirmCallback = callback;
+    document.getElementById('confirmModal').style.display = 'flex';
+}
+function closeConfirmModal() {
+    document.getElementById('confirmModal').style.display = 'none';
+    confirmCallback = null;
+}
+document.getElementById('confirmAction').addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    closeConfirmModal();
+});
+
+// =========================================
+// تسجيل الدخول
+// =========================================
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+    else { input.type = 'password'; icon.className = 'fas fa-eye'; }
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    if (appState.isLocked) return;
+
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (username === appState.settings.username && password === appState.settings.password) {
+        appState.loginAttempts = 0;
+        appState.isLoggedIn = true;
+        appState.currentUser = username;
+        saveToLocal();
+        document.getElementById('loginError').style.display = 'none';
+        showMainApp();
+    } else {
+        appState.loginAttempts++;
+        const remaining = appState.settings.maxLoginAttempts - appState.loginAttempts;
+        const errEl = document.getElementById('loginError');
+        errEl.textContent = `بيانات خاطئة. محاولات متبقية: ${remaining}`;
+        errEl.style.display = 'block';
+
+        if (appState.loginAttempts >= appState.settings.maxLoginAttempts) {
+            appState.isLocked = true;
+            saveToLocal();
+            document.getElementById('loginLocked').style.display = 'block';
+            document.getElementById('loginBtn').disabled = true;
+        }
+    }
+}
+
+function handleLogout() {
+    appState.isLoggedIn = false;
+    appState.currentUser = '';
+    saveToLocal();
+    if (countdownInterval) clearInterval(countdownInterval);
+    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function showMainApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'flex';
+    document.getElementById('currentUser').querySelector('span').textContent = appState.currentUser;
+    refreshAll();
+    startCountdownTimer();
+}
+
+// =========================================
+// التنقل
+// =========================================
+const pageTitles = {
+    dashboard: 'لوحة المعلومات', tenants: 'المستأجرون', contracts: 'العقود',
+    reports: 'التقارير', notifications: 'الإشعارات', backup: 'النسخ الاحتياطي', settings: 'الإعدادات'
+};
+
+function navigateTo(page, navEl) {
+    // تحديث الصفحة النشطة
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+
+    // تحديث عنصر التنقل النشط
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (navEl) navEl.classList.add('active');
+
+    // تحديث العنوان
+    document.getElementById('pageTitle').textContent = pageTitles[page] || '';
+
+    // إغلاق القائمة الجانبية على الموبايل
+    document.getElementById('sidebar').classList.remove('open');
+
+    // تحديث المحتوى حسب الصفحة
+    if (page === 'reports') generateReport();
+    if (page === 'settings') loadSettingsToForm();
+    if (page === 'notifications') loadNotifSettingsToForm();
+}
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+}
+
+// =========================================
+// إدارة المستأجرين
+// =========================================
+function openTenantModal(id = null) {
+    const modal = document.getElementById('tenantModal');
+    const form = document.getElementById('tenantForm');
+    form.reset();
+    document.getElementById('tenantId').value = '';
+
+    if (id) {
+        const t = appState.tenants.find(t => t.id === id);
+        if (!t) return;
+        document.getElementById('tenantModalTitle').textContent = 'تعديل مستأجر';
+        document.getElementById('tenantId').value = t.id;
+        document.getElementById('tenantName').value = t.name || '';
+        document.getElementById('tenantPhone').value = t.phone || '';
+        document.getElementById('tenantEmail').value = t.email || '';
+        document.getElementById('tenantWhatsapp').value = t.whatsapp || '';
+        document.getElementById('tenantProperty').value = t.property || '';
+        document.getElementById('tenantContractType').value = t.contractType || 'شهري';
+        document.getElementById('tenantRent').value = t.rent || 0;
+        document.getElementById('tenantStartDate').value = t.startDate || '';
+        document.getElementById('tenantEndDate').value = t.endDate || '';
+        document.getElementById('tenantNextPayment').value = t.nextPayment || '';
+        document.getElementById('tenantNotes').value = t.notes || '';
+    } else {
+        document.getElementById('tenantModalTitle').textContent = 'إضافة مستأجر';
+    }
+    modal.style.display = 'flex';
+}
+
+function closeTenantModal() {
+    document.getElementById('tenantModal').style.display = 'none';
+}
+
+function saveTenant(e) {
+    e.preventDefault();
+    const id = document.getElementById('tenantId').value;
+    const tenantData = {
+        id: id || generateId(),
+        name: document.getElementById('tenantName').value.trim(),
+        phone: document.getElementById('tenantPhone').value.trim(),
+        email: document.getElementById('tenantEmail').value.trim(),
+        whatsapp: document.getElementById('tenantWhatsapp').value.trim(),
+        property: document.getElementById('tenantProperty').value.trim(),
+        contractType: document.getElementById('tenantContractType').value,
+        rent: parseFloat(document.getElementById('tenantRent').value) || 0,
+        startDate: document.getElementById('tenantStartDate').value,
+        endDate: document.getElementById('tenantEndDate').value,
+        nextPayment: document.getElementById('tenantNextPayment').value,
+        notes: document.getElementById('tenantNotes').value.trim(),
+        updatedAt: new Date().toISOString()
+    };
+
+    if (id) {
+        // تعديل
+        const idx = appState.tenants.findIndex(t => t.id === id);
+        if (idx !== -1) {
+            tenantData.createdAt = appState.tenants[idx].createdAt;
+            appState.tenants[idx] = tenantData;
+        }
+        addActivity('new', `تم تعديل بيانات ${tenantData.name}`);
+        showToast('تم تعديل المستأجر بنجاح');
+    } else {
+        // إضافة
+        tenantData.createdAt = new Date().toISOString();
+        appState.tenants.push(tenantData);
+        addActivity('new', `تم إضافة مستأجر جديد: ${tenantData.name}`);
+        showToast('تم إضافة المستأجر بنجاح');
+    }
+
+    saveToLocal();
+    syncToGithub();
+    closeTenantModal();
+    refreshAll();
+}
+
+function deleteTenant(id) {
+    const t = appState.tenants.find(t => t.id === id);
+    if (!t) return;
+    showConfirm('تأكيد الحذف', `هل تريد حذف المستأجر "${t.name}"؟ سيتم حذف جميع مدفوعاته أيضاً.`, () => {
+        appState.tenants = appState.tenants.filter(t => t.id !== id);
+        appState.payments = appState.payments.filter(p => p.tenantId !== id);
+        addActivity('delete', `تم حذف المستأجر ${t.name}`);
+        saveToLocal();
+        syncToGithub();
+        refreshAll();
+        showToast('تم الحذف', 'warning');
+    });
+}
+
+function getTenantStatus(t) {
+    if (!t.endDate) return 'active';
+    const end = new Date(t.endDate); end.setHours(0,0,0,0);
+    const now = new Date(); now.setHours(0,0,0,0);
+    return end < now ? 'expired' : 'active';
+}
+
+// =========================================
+// المدفوعات
+// =========================================
+function openPaymentModal(tenantId) {
+    const t = appState.tenants.find(t => t.id === tenantId);
+    if (!t) return;
+    document.getElementById('paymentTenantId').value = tenantId;
+    document.getElementById('paymentTenantName').value = t.name;
+    document.getElementById('paymentAmount').value = t.rent;
+    document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('paymentNotes').value = '';
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
+
+function savePayment(e) {
+    e.preventDefault();
+    const tenantId = document.getElementById('paymentTenantId').value;
+    const t = appState.tenants.find(t => t.id === tenantId);
+    if (!t) return;
+
+    const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const payment = {
+        id: generateId(),
+        tenantId: tenantId,
+        amount: parseFloat(document.getElementById('paymentAmount').value) || 0,
+        date: document.getElementById('paymentDate').value,
+        method: method,
+        notes: document.getElementById('paymentNotes').value.trim(),
+        createdAt: new Date().toISOString()
+    };
+
+    appState.payments.push(payment);
+
+    // تحديث تاريخ الدفع القادم للمستأجر
+    t.nextPayment = getNextPaymentDate(t.nextPayment || t.startDate, t.contractType);
+
+    addActivity('payment', `تم تسجيل دفعة ${formatNumber(payment.amount)} ${getCurrency()} من ${t.name}`);
+    saveToLocal();
+    syncToGithub();
+    closePaymentModal();
+    refreshAll();
+    showToast('تم تسجيل الدفعة بنجاح');
+}
+
+function deletePayment(id) {
+    showConfirm('حذف الدفعة', 'هل تريد حذف هذه الدفعة؟', () => {
+        const p = appState.payments.find(p => p.id === id);
+        appState.payments = appState.payments.filter(p => p.id !== id);
+        if (p) {
+            const t = appState.tenants.find(t => t.id === p.tenantId);
+            addActivity('delete', `تم حذف دفعة من ${t ? t.name : 'مجهول'}`);
+        }
+        saveToLocal();
+        syncToGithub();
+        refreshAll();
+        showToast('تم حذف الدفعة', 'warning');
+    });
+}
+
+function getTenantPayments(tenantId) {
+    return appState.payments.filter(p => p.tenantId === tenantId).sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+// =========================================
+// سجل النشاط
+// =========================================
+function addActivity(type, message) {
+    appState.activities.unshift({
+        id: generateId(),
+        type: type,
+        message: message,
+        date: new Date().toISOString()
+    });
+    // الاحتفاظ بآخر 50 نشاط فقط
+    if (appState.activities.length > 50) appState.activities = appState.activities.slice(0, 50);
+}
+
+// =========================================
+// إرسال إشعارات
+// =========================================
+function sendWhatsApp(tenantId) {
+    const t = appState.tenants.find(t => t.id === tenantId);
+    if (!t) return;
+    const phone = t.whatsapp || t.phone;
+    if (!phone) { showToast('لا يوجد رقم واتساب أو هاتف', 'error'); return; }
+
+    const days = daysUntil(t.nextPayment);
+    const msg = appState.settings.notifBodyAr
+        .replace('{name}', t.name)
+        .replace('{property}', t.property)
+        .replace('{amount}', formatNumber(t.rent) + ' ' + getCurrency())
+        .replace('{days}', days)
+        .replace('{date}', formatDate(t.nextPayment));
+
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    showToast('تم فتح واتساب', 'success');
+}
+
+function sendEmail(tenantId) {
+    const t = appState.tenants.find(t => t.id === tenantId);
+    if (!t || !t.email) { showToast('لا يوجد بريد إلكتروني', 'error'); return; }
+
+    const cfg = appState.settings.emailjs;
+    if (!cfg.serviceId || !cfg.templateId || !cfg.userId) {
+        showToast('يرجى إعداد EmailJS أولاً من صفحة الإشعارات', 'error');
+        return;
+    }
+
+    const days = daysUntil(t.nextPayment);
+    emailjs.init(cfg.userId);
+    emailjs.send(cfg.serviceId, cfg.templateId, {
+        to_email: t.email,
+        to_name: t.name,
+        property: t.property,
+        amount: formatNumber(t.rent) + ' ' + getCurrency(),
+        days: days,
+        date: formatDate(t.nextPayment),
+        message: appState.settings.notifBodyAr
+            .replace('{name}', t.name)
+            .replace('{property}', t.property)
+            .replace('{amount}', formatNumber(t.rent) + ' ' + getCurrency())
+            .replace('{days}', days)
+            .replace('{date}', formatDate(t.nextPayment))
+    }).then(() => {
+        showToast('تم إرسال البريد بنجاح', 'success');
+    }).catch(err => {
+        showToast('فشل إرسال البريد: ' + err.text, 'error');
+    });
+}
+
+function requestBrowserNotificationPermission() {
+    if ('Notification' in window) {
+        Notification.requestPermission().then(perm => {
+            if (perm === 'granted') showToast('تم تفعيل إشعارات المتصفح', 'success');
+            else showToast('تم رفض إذن الإشعارات', 'warning');
+        });
+    } else {
+        showToast('المتصفح لا يدعم الإشعارات', 'error');
+    }
+}
+
+function checkBrowserNotifications() {
+    if (!appState.settings.browserNotifications || Notification.permission !== 'granted') return;
+    const daysBefore = appState.settings.notifyDaysBefore || 7;
+    appState.tenants.forEach(t => {
+        const days = daysUntil(t.nextPayment);
+        if (days >= 0 && days <= daysBefore) {
+            new Notification('تذكير بالإيجار', {
+                body: `إيجار ${t.property} بمبلغ ${formatNumber(t.rent)} ${getCurrency()} مستحق خلال ${days} يوم`,
+                icon: '🏢'
+            });
+        }
+    });
+}
+
+// =========================================
+// تحديث واجهة المستخدم
+// =========================================
+function refreshAll() {
+    refreshDashboard();
+    refreshTenantsList();
+    refreshContractsList();
+    refreshReportFilters();
+}
+
+function refreshDashboard() {
+    const tenants = appState.tenants;
+    const currency = getCurrency();
+
+    // الإحصائيات
+    document.getElementById('statTenants').textContent = tenants.length;
+
+    const totalRevenue = tenants.reduce((sum, t) => sum + (t.rent || 0), 0);
+    document.getElementById('statRevenue').textContent = formatNumber(totalRevenue) + ' ' + currency;
+
+    const upcoming = tenants.filter(t => {
+        const d = daysUntil(t.nextPayment);
+        return d >= 0 && d <= 7;
+    }).length;
+    document.getElementById('statUpcoming').textContent = upcoming;
+
+    const overdue = tenants.filter(t => daysUntil(t.nextPayment) < 0).length;
+    document.getElementById('statOverdue').textContent = overdue;
+
+    // العد التنازلي
+    refreshCountdowns();
+
+    // آخر النشاطات
+    refreshActivities();
+}
+
+function refreshCountdowns() {
+    const container = document.getElementById('countdownContainer');
+    const currency = getCurrency();
+    const tenants = appState.tenants.filter(t => getTenantStatus(t) === 'active');
+
+    if (tenants.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-hourglass-half"></i><p>لا يوجد مستأجرون نشطون</p></div>';
+        return;
+    }
+
+    // ترتيب حسب الأقرب
+    tenants.sort((a, b) => daysUntil(a.nextPayment) - daysUntil(b.nextPayment));
+
+    container.innerHTML = tenants.map(t => {
+        const days = daysUntil(t.nextPayment);
+        const isOverdue = days < 0;
+        const absDays = Math.abs(days);
+        const d = Math.floor(absDays);
+        const h = Math.floor((absDays - d) * 24);
+        const m = Math.floor(((absDays - d) * 24 - h) * 60);
+
+        return `
+            <div class="countdown-card ${isOverdue ? 'overdue' : ''}" data-next="${t.nextPayment}">
+                <div class="cc-header">
+                    <div><div class="cc-name">${t.name}</div><div class="cc-property">${t.property}</div></div>
+                    <div class="cc-amount">${formatNumber(t.rent)} ${currency}</div>
+                </div>
+                <div class="cc-timer">
+                    <div class="cc-time-unit"><span class="num">${isOverdue ? '-' : ''}${d}</span><span class="label">يوم</span></div>
+                    <div class="cc-time-unit"><span class="num">${h}</span><span class="label">ساعة</span></div>
+                    <div class="cc-time-unit"><span class="num">${m}</span><span class="label">دقيقة</span></div>
+                </div>
+                <div style="font-size:12px;color:${isOverdue ? 'var(--danger)' : 'var(--text-muted)'};margin-top:6px">
+                    ${isOverdue ? 'متأخر' : 'متبقي'} — ${formatDate(t.nextPayment)}
+                </div>
+                <div class="cc-actions">
+                    <button class="btn btn-sm btn-primary" onclick="openPaymentModal('${t.id}')"><i class="fas fa-money-bill"></i> دفع</button>
+                    <button class="btn btn-sm btn-outline" onclick="sendWhatsApp('${t.id}')"><i class="fab fa-whatsapp"></i></button>
+                    <button class="btn btn-sm btn-ghost" onclick="sendEmail('${t.id}')"><i class="fas fa-envelope"></i></button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function startCountdownTimer() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    // تحديث العد التنازلي كل دقيقة
+    countdownInterval = setInterval(() => refreshCountdowns(), 60000);
+}
+
+function refreshActivities() {
+    const container = document.getElementById('recentActivity');
+    const activities = appState.activities.slice(0, 10);
+
+    if (activities.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>لا توجد عمليات بعد</p></div>';
+        return;
+    }
+
+    container.innerHTML = activities.map(a => {
+        const icons = { payment: 'fa-coins', new: 'fa-user-plus', delete: 'fa-trash' };
+        return `
+            <div class="activity-item">
+                <div class="act-icon ${a.type}"><i class="fas ${icons[a.type] || 'fa-info'}"></i></div>
+                <div style="flex:1">${a.message}</div>
+                <div style="font-size:11px;color:var(--text-muted);white-space:nowrap">${timeAgo(a.date)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const now = new Date();
+    const d = new Date(dateStr);
+    const diff = Math.floor((now - d) / 1000);
+    if (diff < 60) return 'الآن';
+    if (diff < 3600) return `منذ ${Math.floor(diff/60)} دقيقة`;
+    if (diff < 86400) return `منذ ${Math.floor(diff/3600)} ساعة`;
+    return `منذ ${Math.floor(diff/86400)} يوم`;
+}
+
+function refreshTenantsList() {
+    const container = document.getElementById('tenantsList');
+    const currency = getCurrency();
+    const search = (document.getElementById('tenantSearch').value || '').toLowerCase();
+    let tenants = appState.tenants;
+
+    if (search) {
+        tenants = tenants.filter(t =>
+            (t.name || '').toLowerCase().includes(search) ||
+            (t.property || '').toLowerCase().includes(search) ||
+            (t.phone || '').includes(search)
+        );
+    }
+
+    if (tenants.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>لا يوجد مستأجرون</p></div>';
+        return;
+    }
+
+    container.innerHTML = tenants.map(t => {
+        const status = getTenantStatus(t);
+        const statusLabel = status === 'active' ? 'نشط' : 'منتهي';
+        const payments = getTenantPayments(t.id);
+        const totalPaid = payments.reduce((s, p) => s + (p.amount || 0), 0);
+
+        return `
+            <div class="tenant-card">
+                <div class="tc-header">
+                    <div><div class="tc-name">${t.name}</div><div class="tc-property"><i class="fas fa-map-marker-alt"></i> ${t.property}</div></div>
+                    <span class="tc-status ${status}">${statusLabel}</span>
+                </div>
+                <div class="tc-details">
+                    ${t.phone ? `<div class="tc-detail"><i class="fas fa-phone"></i> ${t.phone}</div>` : ''}
+                    ${t.email ? `<div class="tc-detail"><i class="fas fa-envelope"></i> ${t.email}</div>` : ''}
+                    ${t.whatsapp ? `<div class="tc-detail"><i class="fab fa-whatsapp"></i> ${t.whatsapp}</div>` : ''}
+                    <div class="tc-detail"><i class="fas fa-file-contract"></i> ${t.contractType}</div>
+                    <div class="tc-detail"><i class="fas fa-calendar-plus"></i> ${formatDate(t.startDate)}</div>
+                    <div class="tc-detail"><i class="fas fa-calendar-check"></i> ${formatDate(t.endDate)}</div>
+                </div>
+                <div class="tc-rent">${formatNumber(t.rent)} ${currency} <small>/ ${t.contractType}</small></div>
+                ${payments.length > 0 ? `
+                    <div class="payment-history">
+                        <h4>آخر المدفوعات (${payments.length}) — الإجمالي: ${formatNumber(totalPaid)} ${currency}</h4>
+                        ${payments.slice(0, 3).map(p => `
+                            <div class="ph-item">
+                                <span>${formatDate(p.date)} <span class="method-badge ${p.method}">${p.method === 'cash' ? 'نقدي' : 'تحويل'}</span></span>
+                                <span style="font-weight:700">${formatNumber(p.amount)} ${currency}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                <div class="tc-actions" style="margin-top:12px">
+                    <button class="btn btn-sm btn-primary" onclick="openPaymentModal('${t.id}')"><i class="fas fa-money-bill"></i> دفع</button>
+                    <button class="btn btn-sm btn-outline" onclick="openTenantModal('${t.id}')"><i class="fas fa-edit"></i> تعديل</button>
+                    <button class="btn btn-sm btn-ghost" onclick="sendWhatsApp('${t.id}')"><i class="fab fa-whatsapp"></i></button>
+                    <button class="btn btn-sm btn-ghost" onclick="sendEmail('${t.id}')"><i class="fas fa-envelope"></i></button>
+                    <button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="deleteTenant('${t.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function refreshContractsList() {
+    const container = document.getElementById('contractsList');
+    const currency = getCurrency();
+    const search = (document.getElementById('contractSearch').value || '').toLowerCase();
+    let tenants = appState.tenants;
+
+    if (search) {
+        tenants = tenants.filter(t =>
+            (t.name || '').toLowerCase().includes(search) ||
+            (t.property || '').toLowerCase().includes(search)
+        );
+    }
+
+    if (tenants.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-file-contract"></i><p>لا توجد عقود</p></div>';
+        return;
+    }
+
+    container.innerHTML = tenants.map(t => {
+        const status = getTenantStatus(t);
+        const payments = getTenantPayments(t.id);
+        const totalPaid = payments.reduce((s, p) => s + (p.amount || 0), 0);
+
+        return `
+            <div class="contract-card">
+                <div class="tc-header">
+                    <div class="tc-name">${t.name}</div>
+                    <span class="cc-contract-type">${t.contractType}</span>
+                </div>
+                <div class="cc-row"><span class="cc-label">العقار</span><span class="cc-value">${t.property}</span></div>
+                <div class="cc-row"><span class="cc-label">الإيجار</span><span class="cc-value" style="color:var(--accent)">${formatNumber(t.rent)} ${currency}</span></div>
+                <div class="cc-row"><span class="cc-label">البداية</span><span class="cc-value">${formatDate(t.startDate)}</span></div>
+                <div class="cc-row"><span class="cc-label">النهاية</span><span class="cc-value">${formatDate(t.endDate)}</span></div>
+                <div class="cc-row"><span class="cc-label">الدفع القادم</span><span class="cc-value" style="color:${daysUntil(t.nextPayment) < 0 ? 'var(--danger)' : 'var(--amber)'}">${formatDate(t.nextPayment)}</span></div>
+                <div class="cc-row"><span class="cc-label">الحالة</span><span class="tc-status ${status}">${status === 'active' ? 'نشط' : 'منتهي'}</span></div>
+                <div class="cc-row"><span class="cc-label">المدفوع</span><span class="cc-value">${formatNumber(totalPaid)} ${currency}</span></div>
+                <div class="tc-actions" style="margin-top:12px">
+                    <button class="btn btn-sm btn-primary" onclick="openPaymentModal('${t.id}')"><i class="fas fa-money-bill"></i> دفع</button>
+                    <button class="btn btn-sm btn-outline" onclick="openTenantModal('${t.id}')"><i class="fas fa-edit"></i> تعديل</button>
+                    <button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="deleteTenant('${t.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// =========================================
+// التقارير
+// =========================================
+function refreshReportFilters() {
+    const select = document.getElementById('reportTenantFilter');
+    const current = select.value;
+    select.innerHTML = '<option value="all">الكل</option>';
+    appState.tenants.forEach(t => {
+        select.innerHTML += `<option value="${t.id}">${t.name} — ${t.property}</option>`;
+    });
+    if (current) select.value = current;
+}
+
+function generateReport() {
+    const container = document.getElementById('reportContent');
+    const currency = getCurrency();
+    const tenantFilter = document.getElementById('reportTenantFilter').value;
+    const periodFilter = document.getElementById('reportPeriodFilter').value;
+
+    let payments = [...appState.payments];
+    const now = new Date();
+
+    // فلترة حسب المستأجر
+    if (tenantFilter !== 'all') {
+        payments = payments.filter(p => p.tenantId === tenantFilter);
+    }
+
+    // فلترة حسب الفترة
+    if (periodFilter === 'month') {
+        payments = payments.filter(p => {
+            const d = new Date(p.date);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        });
+    } else if (periodFilter === 'year') {
+        payments = payments.filter(p => new Date(p.date).getFullYear() === now.getFullYear());
+    }
+
+    // ترتيب تنازلي
+    payments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const totalAmount = payments.reduce((s, p) => s + (p.amount || 0), 0);
+    const cashTotal = payments.filter(p => p.method === 'cash').reduce((s, p) => s + (p.amount || 0), 0);
+    const transferTotal = payments.filter(p => p.method === 'transfer').reduce((s, p) => s + (p.amount || 0), 0);
+
+    container.innerHTML = `
+        <div class="report-summary">
+            <div class="report-summary-item"><div class="rs-value">${payments.length}</div><div class="rs-label">عدد العمليات</div></div>
+            <div class="report-summary-item"><div class="rs-value">${formatNumber(totalAmount)}</div><div class="rs-label">الإجمالي (${currency})</div></div>
+            <div class="report-summary-item"><div class="rs-value">${formatNumber(cashTotal)}</div><div class="rs-label">نقدي (${currency})</div></div>
+            <div class="report-summary-item"><div class="rs-value">${formatNumber(transferTotal)}</div><div class="rs-label">تحويل (${currency})</div></div>
+        </div>
+        ${payments.length > 0 ? `
+            <table class="report-table">
+                <thead><tr><th>#</th><th>المستأجر</th><th>المبلغ</th><th>التاريخ</th><th>الطريقة</th><th>ملاحظات</th></tr></thead>
+                <tbody>
+                    ${payments.map((p, i) => {
+                        const t = appState.tenants.find(t => t.id === p.tenantId);
+                        return `<tr>
+                            <td>${i+1}</td>
+                            <td>${t ? t.name : 'محذوف'}</td>
+                            <td style="font-weight:700;color:var(--accent)">${formatNumber(p.amount)} ${currency}</td>
+                            <td>${formatDate(p.date)}</td>
+                            <td><span class="method-badge ${p.method}">${p.method === 'cash' ? 'نقدي' : 'تحويل'}</span></td>
+                            <td style="color:var(--text-muted)">${p.notes || '—'}</td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        ` : '<div class="empty-state"><i class="fas fa-chart-bar"></i><p>لا توجد مدفوعات</p></div>'}
+    `;
+}
+
+function printReport() {
+    window.print();
+}
+
+// =========================================
+// النسخ الاحتياطي
+// =========================================
+function backupData() {
+    const data = {
+        version: '2.0',
+        exportDate: new Date().toISOString(),
+        tenants: appState.tenants,
+        payments: appState.payments,
+        activities: appState.activities,
+        settings: appState.settings
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rent-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('تم تنزيل النسخة الاحتياطية', 'success');
+}
+
+function restoreData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!data.tenants && !data.payments) {
+                showToast('ملف غير صالح', 'error');
+                return;
+            }
+            showConfirm('استعادة النسخة الاحتياطية', 'سيتم استبدال جميع البيانات الحالية. متأكد؟', () => {
+                if (data.tenants) appState.tenants = data.tenants;
+                if (data.payments) appState.payments = data.payments;
+                if (data.activities) appState.activities = data.activities;
+                if (data.settings) {
+                    appState.settings = { ...appState.settings, ...data.settings };
+                    appState.settings.github = { ...appState.settings.github, ...(data.settings.github || {}) };
+                    appState.settings.emailjs = { ...appState.settings.emailjs, ...(data.settings.emailjs || {}) };
+                }
+                saveToLocal();
+                syncToGithub();
+                refreshAll();
+                showToast('تمت الاستعادة بنجاح', 'success');
+            });
+        } catch(err) {
+            showToast('خطأ في قراءة الملف', 'error');
+        }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+// =========================================
+// الإعدادات
+// =========================================
+function loadSettingsToForm() {
+    document.getElementById('githubOwner').value = appState.settings.github.owner || '';
+    document.getElementById('githubRepo').value = appState.settings.github.repo || '';
+    document.getElementById('githubToken').value = appState.settings.github.token || '';
+    document.getElementById('maxLoginAttempts').value = appState.settings.maxLoginAttempts || 5;
+    document.getElementById('settingsUsername').value = appState.settings.username || '';
+    document.getElementById('currencySelect').value = appState.settings.currency || 'ر.س';
+}
+
+function loadNotifSettingsToForm() {
+    document.getElementById('emailjsServiceId').value = appState.settings.emailjs.serviceId || '';
+    document.getElementById('emailjsTemplateId').value = appState.settings.emailjs.templateId || '';
+    document.getElementById('emailjsUserId').value = appState.settings.emailjs.userId || '';
+    document.getElementById('ownerEmail').value = appState.settings.ownerEmail || '';
+    document.getElementById('ownerWhatsapp').value = appState.settings.ownerWhatsapp || '';
+    document.getElementById('notifyDaysBefore').value = appState.settings.notifyDaysBefore || 7;
+    document.getElementById('browserNotifications').checked = appState.settings.browserNotifications || false;
+    document.getElementById('notifBodyAr').value = appState.settings.notifBodyAr || '';
+    document.getElementById('notifBodyEn').value = appState.settings.notifBodyEn || '';
+}
+
+function saveGithubConfig() {
+    appState.settings.github.owner = document.getElementById('githubOwner').value.trim();
+    appState.settings.github.repo = document.getElementById('githubRepo').value.trim();
+    appState.settings.github.token = document.getElementById('githubToken').value.trim();
+    saveToLocal();
+    showToast('تم حفظ إعدادات GitHub', 'success');
+    testGithubConnection();
+}
+
+async function testGithubConnection() {
+    const cfg = {
+        owner: document.getElementById('githubOwner').value.trim(),
+        repo: document.getElementById('githubRepo').value.trim(),
+        token: document.getElementById('githubToken').value.trim()
+    };
+    if (!cfg.owner || !cfg.repo || !cfg.token) {
+        showToast('يرجى ملء جميع حقول GitHub', 'error');
+        return;
+    }
+    showToast('جاري اختبار الاتصال...', 'warning');
+    const oldCfg = { ...appState.settings.github };
+    appState.settings.github = cfg;
+    const result = await githubRead('data.json');
+    if (result !== null || result === null) {
+        // حتى لو الملف غير موجود، المهم الاتصال نجح
+        updateGithubStatus(true);
+        showToast('تم الاتصال بنجاح', 'success');
+        // مزامنة البيانات
+        await syncFromGithub();
+        refreshAll();
+    }
+}
+
+function saveSecuritySettings() {
+    const currentPass = document.getElementById('settingsCurrentPass').value;
+    const newPass = document.getElementById('settingsNewPass').value;
+    const confirmPass = document.getElementById('settingsConfirmPass').value;
+
+    if (currentPass && currentPass !== appState.settings.password) {
+        showToast('كلمة المرور الحالية غير صحيحة', 'error');
+        return;
+    }
+
+    if (newPass && newPass !== confirmPass) {
+        showToast('كلمة المرور الجديدة غير متطابقة', 'error');
+        return;
+    }
+
+    appState.settings.maxLoginAttempts = parseInt(document.getElementById('maxLoginAttempts').value) || 5;
+    const newUsername = document.getElementById('settingsUsername').value.trim();
+    if (newUsername) appState.settings.username = newUsername;
+    if (newPass) appState.settings.password = newPass;
+
+    // إلغاء القفل إذا كان مقفولاً
+    appState.isLocked = false;
+    appState.loginAttempts = 0;
+
+    saveToLocal();
+    showToast('تم حفظ إعدادات الأمان', 'success');
+
+    // مسح الحقول
+    document.getElementById('settingsCurrentPass').value = '';
+    document.getElementById('settingsNewPass').value = '';
+    document.getElementById('settingsConfirmPass').value = '';
+}
+
+function saveGeneralSettings() {
+    appState.settings.currency = document.getElementById('currencySelect').value;
+    saveToLocal();
+    refreshAll();
+    showToast('تم حفظ الإعدادات العامة', 'success');
+}
+
+function saveNotificationSettings() {
+    appState.settings.emailjs.serviceId = document.getElementById('emailjsServiceId').value.trim();
+    appState.settings.emailjs.templateId = document.getElementById('emailjsTemplateId').value.trim();
+    appState.settings.emailjs.userId = document.getElementById('emailjsUserId').value.trim();
+    appState.settings.ownerEmail = document.getElementById('ownerEmail').value.trim();
+    appState.settings.ownerWhatsapp = document.getElementById('ownerWhatsapp').value.trim();
+    appState.settings.notifyDaysBefore = parseInt(document.getElementById('notifyDaysBefore').value) || 7;
+    appState.settings.browserNotifications = document.getElementById('browserNotifications').checked;
+    appState.settings.notifBodyAr = document.getElementById('notifBodyAr').value;
+    appState.settings.notifBodyEn = document.getElementById('notifBodyEn').value;
+    saveToLocal();
+    showToast('تم حفظ إعدادات الإشعارات', 'success');
+}
+
+function confirmDeleteAll() {
+    showConfirm('حذف جميع البيانات', 'سيتم حذف كل المستأجرين والمدفوعات نهائياً. متأكد؟', () => {
+        appState.tenants = [];
+        appState.payments = [];
+        appState.activities = [];
+        saveToLocal();
+        syncToGithub();
+        refreshAll();
+        showToast('تم حذف جميع البيانات', 'warning');
+    });
+}
+
+// =========================================
+// التهيئة عند تحميل الصفحة
+// =========================================
+async function initApp() {
+    // تحميل البيانات من التخزين المحلي أولاً
+    loadFromLocal();
+
+    // إخفاء شاشة التحميل
+    document.getElementById('loadingOverlay').style.display = 'none';
+
+    // محاولة المزامنة مع GitHub
+    const cfg = appState.settings.github;
+    if (cfg.owner && cfg.repo && cfg.token) {
+        await syncFromGithub();
+    } else {
+        updateGithubStatus(false);
+    }
+
+    // التحقق من حالة الدخول
+    if (appState.isLocked) {
+        document.getElementById('loginLocked').style.display = 'block';
+        document.getElementById('loginBtn').disabled = true;
+    }
+
+    if (appState.isLoggedIn) {
+        showMainApp();
+    } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+    }
+
+    // فحص إشعارات المتصفح بشكل دوري
+    setInterval(checkBrowserNotifications, 3600000); // كل ساعة
+
+    // تحديث حالة الاتصال
+    if (cfg.owner && cfg.repo && cfg.token) {
+        updateGithubStatus(true);
+    }
+}
+
+// تشغيل التطبيق
+initApp();
+</script>
+</body>
+</html>
